@@ -68,7 +68,7 @@ export default function TeamPage() {
             case 1:
                 return <Crown className="h-5 w-5 text-yellow-400" />
             case 2:
-                return <Star className="h-5 w-5 text-purple-400" />
+                return <Star className="h-5 w-5 text-green-400" />
             case 3:
                 return <Award className="h-5 w-5 text-blue-400" />
             default:
@@ -81,7 +81,7 @@ export default function TeamPage() {
             case 1:
                 return "from-yellow-500/20 to-orange-500/20 border-yellow-500/30"
             case 2:
-                return "from-purple-500/20 to-pink-500/20 border-purple-500/30"
+                return "from-green-500/20 to-pink-500/20 border-green-500/30"
             case 3:
                 return "from-blue-500/20 to-cyan-500/20 border-blue-500/30"
             default:
@@ -111,7 +111,7 @@ export default function TeamPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-6">
@@ -162,8 +162,8 @@ export default function TeamPage() {
                     <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
                         <CardContent className="p-4">
                             <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2 bg-purple-500/20 rounded-lg">
-                                    <Wallet className="h-4 w-4 text-purple-400" />
+                                <div className="p-2 bg-green-500/20 rounded-lg">
+                                    <Wallet className="h-4 w-4 text-green-400" />
                                 </div>
                                 <div>
                                     <p className="text-gray-400 text-xs">Total Deposit</p>
@@ -236,7 +236,7 @@ export default function TeamPage() {
 
                                         <div className="bg-white/10 rounded-lg p-3">
                                             <div className="flex items-center gap-2 mb-1">
-                                                <Wallet className="h-4 w-4 text-purple-400" />
+                                                <Wallet className="h-4 w-4 text-green-400" />
                                                 <span className="text-gray-300 text-sm">Deposit</span>
                                             </div>
                                             <p className="text-white font-bold">{formatCurrency(data.totalDeposit)}</p>
@@ -275,7 +275,7 @@ export default function TeamPage() {
                                                         <div className="flex items-center gap-3">
                                                             <Avatar className="w-10 h-10">
                                                                 <AvatarImage src="/placeholder.svg" />
-                                                                <AvatarFallback className="bg-purple-600 text-white text-sm">
+                                                                <AvatarFallback className="bg-green-600 text-white text-sm">
                                                                     {member.avatar}
                                                                 </AvatarFallback>
                                                             </Avatar>
@@ -339,8 +339,8 @@ export default function TeamPage() {
                                 </div>
                                 <p className="text-gray-400 text-sm">Avg Investment per User</p>
                             </div>
-                            <div className="text-center p-4 bg-purple-500/10 rounded-lg">
-                                <div className="text-2xl font-bold text-purple-400 mb-1">
+                            <div className="text-center p-4 bg-green-500/10 rounded-lg">
+                                <div className="text-2xl font-bold text-green-400 mb-1">
                                     {Math.round((totalStats.totalDeposit / totalStats.totalInvestment) * 100)}%
                                 </div>
                                 <p className="text-gray-400 text-sm">Deposit to Investment Ratio</p>

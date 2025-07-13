@@ -10,7 +10,7 @@ export default function RegisterForm({ className, ...props }) {
     return (
         <div
             className={cn(
-                "min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4",
+                "min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4",
                 className,
             )}
             {...props}
@@ -69,13 +69,13 @@ export default function RegisterForm({ className, ...props }) {
                                     className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
                                 />
                             </div>
-                            <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                            <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">
                                 Sign Up
                             </Button>
                         </div>
                         <div className="text-center text-sm text-gray-400 mt-6">
                             Already have an account?{" "}
-                            <Link href="/login" className="underline underline-offset-4 text-purple-400">
+                            <Link href="/login" className="underline underline-offset-4 text-green-400">
                                 Login
                             </Link>
                         </div>
@@ -110,7 +110,7 @@ export default function RegisterForm({ className, ...props }) {
                                 Sign up with Google
                             </Button>
                         </div>
-                        <div className="text-gray-400 text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4 *:[a]:text-purple-400 mt-6">
+                        <div className="text-gray-400 text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4 *:[a]:text-green-400 mt-6">
                             By clicking Sign Up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
                         </div>
                     </form>

@@ -9,7 +9,7 @@ import Link from "next/link"
 
 export default function LoginForm({ className, ...props }) {
   return (
-    <div className={cn("min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4", className)} {...props}>
+    <div className={cn("min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4", className)} {...props}>
       <Card className="w-full max-w-sm bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
         <CardHeader className="text-center">
           <CardTitle className="text-xl text-white">Welcome back</CardTitle>
@@ -28,19 +28,19 @@ export default function LoginForm({ className, ...props }) {
                 <div className="grid gap-3">
                   <div className="flex items-center">
                     <Label htmlFor="password" className="text-gray-300">Password</Label>
-                    <a href="#" className="ml-auto text-sm text-purple-400 underline-offset-4 hover:underline">
+                    <a href="#" className="ml-auto text-sm text-green-400 underline-offset-4 hover:underline">
                       Forgot your password?
                     </a>
                   </div>
                   <Input id="password" type="password" required className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500" />
                 </div>
-                <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">
                   Login
                 </Button>
               </div>
               <div className="text-center text-sm text-gray-400">
                 Don&apos;t have an account?{" "}
-                <Link href="/register" className="underline underline-offset-4 text-purple-400">
+                <Link href="/register" className="underline underline-offset-4 text-green-400">
                   Sign up
                 </Link>
               </div>
@@ -69,7 +69,7 @@ export default function LoginForm({ className, ...props }) {
                 </Button>
               </div>
               <div
-                className="text-gray-400 text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4 *:[a]:text-purple-400">
+                className="text-gray-400 text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4 *:[a]:text-green-400">
                 By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
                 and <a href="#">Privacy Policy</a>.
               </div>
