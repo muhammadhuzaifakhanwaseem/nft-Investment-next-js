@@ -16,6 +16,11 @@ import {
   Zap,
   Crown,
   Shield,
+  LayoutDashboard,
+  Users,
+  ArrowDownCircle,
+  ArrowUpCircle,
+  Repeat,
 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -137,54 +142,71 @@ export default function NFTInvestmentDashboard() {
 
   const AppSidebar = () => (
     <Sidebar>
-      <SidebarHeader className="p-4 bg-gradient-to-r from-fuchsia-800 to-fuchsia-700">
+      <SidebarHeader className="p-4 bg-gradient-to-r from-gray-800 to-gray-900">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-gradient-to-r from-emerald-400 to-lime-500 flex items-center justify-center">
             <Shield className="h-4 w-4 text-white" />
           </div>
           <div>
             <h2 className="font-bold text-white">NFT Invest</h2>
-            <p className="text-xs text-white">Dashboard</p>
+            <p className="text-xs text-green-200">Dashboard</p>
           </div>
         </div>
       </SidebarHeader>
-      <SidebarContent className={'pt-2 bg-gradient-to-r from-fuchsia-800 to-fuchsia-700'}>
+      <SidebarContent className="pt-4 bg-gradient-to-r from-gray-800 to-gray-900">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-white">
-              <Wallet className="h-4 w-4" />
-              <Link href={'/'}>Dashboard</Link>
-            </SidebarMenuButton>
+            <Link href="/" className="w-full">
+              <SidebarMenuButton className="text-green-100 hover:bg-green-800/20 hover:text-white w-full">
+                <LayoutDashboard className="h-4 w-4" />
+                <span>Dashboard</span>
+              </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
+
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-white">
-              <Wallet className="h-4 w-4" />
-              <Link href={'/team'}>Team</Link>
-            </SidebarMenuButton>
+            <Link href="/team" className="w-full">
+              <SidebarMenuButton className="text-green-100 hover:bg-green-800/20 hover:text-white w-full">
+                <Users className="h-4 w-4" />
+                <span>Team</span>
+              </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
+
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-white">
-              <Wallet className="h-4 w-4" />
-              <Link href={'/investments/log'}>Your Investments</Link>
-            </SidebarMenuButton>
+            <Link href="/investments/log" className="w-full">
+              <SidebarMenuButton className="text-green-100 hover:bg-green-800/20 hover:text-white w-full">
+                <TrendingUp className="h-4 w-4" />
+                <span>Your Investments</span>
+              </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
+
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-white">
-              <Wallet className="h-4 w-4" />
-              <Link href={'/deposit/log'}>Deposit Records</Link>
-            </SidebarMenuButton>
+            <Link href="/deposit/log" className="w-full">
+              <SidebarMenuButton className="text-green-100 hover:bg-green-800/20 hover:text-white w-full">
+                <ArrowDownCircle className="h-4 w-4" />
+                <span>Deposit Records</span>
+              </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
+
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-white">
-              <Wallet className="h-4 w-4" />
-              <Link href={'withdraw/log'}>Withdrawal Records</Link>
-            </SidebarMenuButton>
+            <Link href="/withdraw/log" className="w-full">
+              <SidebarMenuButton className="text-green-100 hover:bg-green-800/20 hover:text-white w-full">
+                <ArrowUpCircle className="h-4 w-4" />
+                <span>Withdrawal Records</span>
+              </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
+
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-white">
-              <Wallet className="h-4 w-4" />
-              <Link href={'transactions/log'}>Transactions</Link>
-            </SidebarMenuButton>
+            <Link href="/transactions/log" className="w-full">
+              <SidebarMenuButton className="text-green-100 hover:bg-green-800/20 hover:text-white w-full">
+                <Repeat className="h-4 w-4" />
+                <span>Transactions</span>
+              </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
@@ -412,7 +434,7 @@ export default function NFTInvestmentDashboard() {
                           </div>
                         </div>
                         <div className="flex items-center justify-between mb-3">
-                          <span className="text-sm text-gray-400">
+                          <span className="text-sm text-green-400">
                             {plan.minInvestment} - {plan.maxInvestment} ETH
                           </span>
                           <Button

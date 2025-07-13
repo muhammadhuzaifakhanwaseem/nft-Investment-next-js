@@ -82,7 +82,7 @@ export default function DepositPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-green-900 p-4">
       <div className="max-w-md mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
@@ -107,13 +107,13 @@ export default function DepositPage() {
               <div key={step} className="flex items-center">
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                    step <= currentStep ? "bg-purple-600 text-white" : "bg-gray-700 text-gray-400"
+                    step <= currentStep ? "bg-emerald-600 text-white" : "bg-gray-700 text-gray-400"
                   }`}
                 >
                   {step}
                 </div>
                 {step < 3 && (
-                  <div className={`w-16 h-1 mx-2 ${step < currentStep ? "bg-purple-600" : "bg-gray-700"}`} />
+                  <div className={`w-16 h-1 mx-2 ${step < currentStep ? "bg-emerald-600" : "bg-gray-700"}`} />
                 )}
               </div>
             ))}
@@ -150,7 +150,7 @@ export default function DepositPage() {
                       variant="outline"
                       size="sm"
                       onClick={() => copyToClipboard(bankInfo.accountNumber, "accountNumber")}
-                      className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-fuchsia-950"
+                      className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-green-950"
                     >
                       {copiedField === "accountNumber" ? (
                         <Check className="h-4 w-4 text-green-400" />
@@ -172,7 +172,7 @@ export default function DepositPage() {
                       variant="outline"
                       size="sm"
                       onClick={() => copyToClipboard(bankInfo.accountTitle, "accountTitle")}
-                      className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-fuchsia-950"
+                      className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-green-950"
                     >
                       {copiedField === "accountTitle" ? (
                         <Check className="h-4 w-4 text-green-400" />
@@ -194,7 +194,7 @@ export default function DepositPage() {
                       variant="outline"
                       size="sm"
                       onClick={() => copyToClipboard(bankInfo.ibanNumber, "ibanNumber")}
-                      className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-fuchsia-950"
+                      className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-green-950"
                     >
                       {copiedField === "ibanNumber" ? (
                         <Check className="h-4 w-4 text-green-400" />
@@ -205,7 +205,7 @@ export default function DepositPage() {
                   </div>
                 </div>
 
-                <Button onClick={handleNext} className="w-full bg-purple-600 hover:bg-purple-700 mt-6">
+                <Button onClick={handleNext} className="w-full bg-emerald-600 hover:bg-emerald-700 mt-6">
                   Next
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
@@ -229,10 +229,10 @@ export default function DepositPage() {
                 </div>
 
                 {amount && (
-                  <div className="bg-purple-600/20 rounded-lg p-4">
+                  <div className="bg-emerald-600/20 rounded-lg p-4">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-300">Amount to Transfer:</span>
-                      <span className="text-purple-400 font-bold text-xs">PKR {amount}</span>
+                      <span className="text-emerald-400 font-bold text-xs">PKR {amount}</span>
                     </div>
                   </div>
                 )}
@@ -241,14 +241,14 @@ export default function DepositPage() {
                   <Button
                     onClick={() => setCurrentStep(1)}
                     variant="outline"
-                    className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800 bg-fuchsia-700"
+                    className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800 bg-green-700"
                   >
                     Back
                   </Button>
                   <Button
                     onClick={handleNext}
                     disabled={!amount}
-                    className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50"
                   >
                     Next
                     <ArrowRight className="h-4 w-4 ml-2" />
@@ -284,7 +284,7 @@ export default function DepositPage() {
                     <label htmlFor="receipt-upload" className="cursor-pointer flex flex-col items-center gap-2">
                       <Upload className="h-8 w-8 text-gray-400" />
                       <div className="text-gray-400">
-                        <span className="text-purple-400 hover:text-purple-300">Click to upload</span>
+                        <span className="text-emerald-400 hover:text-emerald-300">Click to upload</span>
                       </div>
                       <p className="text-sm text-gray-500">PNG, JPG, PDF</p>
                     </label>
@@ -306,7 +306,7 @@ export default function DepositPage() {
                   <Button
                     onClick={() => setCurrentStep(2)}
                     variant="outline"
-                    className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800 bg-fuchsia-700"
+                    className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800 bg-green-700"
                   >
                     Back
                   </Button>
