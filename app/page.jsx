@@ -65,9 +65,9 @@ export default function NFTInvestmentDashboard() {
       maxInvestment: 50,
       dailyReturn: 3.2,
       duration: 45,
-      color: "bg-purple-500",
-      bgColor: "bg-purple-500/20",
-      textColor: "text-purple-400",
+      color: "bg-emerald-500",
+      bgColor: "bg-emerald-500/20",
+      textColor: "text-emerald-400",
       popular: true,
     },
     {
@@ -139,7 +139,7 @@ export default function NFTInvestmentDashboard() {
     <Sidebar>
       <SidebarHeader className="p-4 bg-gradient-to-r from-fuchsia-800 to-fuchsia-700">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg flex items-center justify-center">
             <Shield className="h-4 w-4 text-white" />
           </div>
           <div>
@@ -196,7 +196,7 @@ export default function NFTInvestmentDashboard() {
       <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-gray-800 text-white">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-purple-400" />
+            <TrendingUp className="h-5 w-5 text-emerald-400" />
             Invest in NFT Plan
           </DialogTitle>
         </DialogHeader>
@@ -262,7 +262,7 @@ export default function NFTInvestmentDashboard() {
             >
               Cancel
             </Button>
-            <Button className="flex-1 bg-purple-600 hover:bg-purple-700">Invest Now</Button>
+            <Button className="flex-1 bg-emerald-600 hover:bg-emerald-700">Invest Now</Button>
           </div>
         </div>
       </DialogContent>
@@ -332,7 +332,7 @@ export default function NFTInvestmentDashboard() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex">
+      <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-gray-800 to-green-900 flex">
         <AppSidebar />
         <div className="flex-1 flex flex-col">
           <div className="flex-1 p-6 pb-32">
@@ -342,7 +342,7 @@ export default function NFTInvestmentDashboard() {
                   <SidebarTrigger className="text-white" />
                   <Avatar className="w-10 h-10">
                     <AvatarImage src="/placeholder.svg" />
-                    <AvatarFallback className="bg-purple-600">E</AvatarFallback>
+                    <AvatarFallback className="bg-emerald-600">E</AvatarFallback>
                   </Avatar>
                   <div>
                     <h1 className="text-white font-semibold">Hi, Evelin!</h1>
@@ -353,7 +353,7 @@ export default function NFTInvestmentDashboard() {
                   <Bell className="h-5 w-5" />
                 </Button>
               </div>
-              <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50 mb-6">
+              <Card className="bg-gray-950/30 border-green-800/50 mb-6">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-gray-400 text-sm">Total Value</span>
@@ -391,7 +391,7 @@ export default function NFTInvestmentDashboard() {
                 <h2 className="text-white text-lg font-semibold mb-4">NFT'S</h2>
                 <div className="space-y-3">
                   {investmentPlans.map((plan) => (
-                    <Card key={plan.id} className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50 relative">
+                    <Card key={plan.id} className="bg-gray-300/5 border-green-800/50 relative">
                       {plan.popular && (
                         <Badge className="absolute -top-2 -right-2 bg-orange-500 text-white z-10">Popular</Badge>
                       )}
@@ -421,7 +421,7 @@ export default function NFTInvestmentDashboard() {
                               setInvestModalOpen(true)
                             }}
                             size="sm"
-                            className="bg-purple-600 hover:bg-purple-700"
+                            className="bg-emerald-600 hover:bg-emerald-700"
                           >
                             BUY
                           </Button>
@@ -431,37 +431,13 @@ export default function NFTInvestmentDashboard() {
                   ))}
                 </div>
               </div>
-              <div className="mb-6">
-                <h2 className="text-white text-lg font-semibold mb-4">Portfolio</h2>
-                <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
-                  <CardContent className="p-4">
-                    <div className="space-y-4">
-                      {portfolio.map((item, index) => (
-                        <div key={index} className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="text-2xl">{item.icon}</div>
-                            <span className="font-medium text-white">{item.name}</span>
-                          </div>
-                          <div className="text-right">
-                            <div className="font-bold text-white">{item.value}</div>
-                            <div className={`text-sm ${item.isPositive ? "text-green-400" : "text-red-400"}`}>
-                              {item.isPositive ? "↑" : "↓"}
-                              {item.change}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
             </div>
           </div>
           <div className="fixed bottom-4 flex items-center justify-center w-full z-50">
-            <Card className="bg-gray-900/90 backdrop-blur-xl border-gray-800/50">
+            <Card className="bg-gray-900/90 backdrop-blur-xl border-green-800/50">
               <CardContent className="px-3 py-1">
                 <div className="flex items-center gap-6">
-                  <Button variant="ghost" size="icon" className="text-purple-400">
+                  <Button variant="ghost" size="icon" className="text-emerald-400">
                     <Home className="h-5 w-5" />
                   </Button>
                   <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
