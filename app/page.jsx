@@ -139,7 +139,6 @@ export default function NFTInvestmentDashboard() {
       icon: "🌸",
     },
   ]
-
   const AppSidebar = () => (
     <Sidebar>
       <SidebarHeader className="p-4 bg-gradient-to-r from-gray-800 to-gray-900">
