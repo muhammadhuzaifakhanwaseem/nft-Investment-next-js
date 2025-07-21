@@ -1,490 +1,126 @@
 "use client"
 
-import { useState } from "react"
-import {
-  Bell,
-  Home,
-  BarChart3,
-  PieChart,
-  CreditCard,
-  Settings,
-  TrendingUp,
-  Plus,
-  Minus,
-  Wallet,
-  Star,
-  Zap,
-  Crown,
-  Shield,
-  LayoutDashboard,
-  Users,
-  ArrowDownCircle,
-  ArrowUpCircle,
-  Repeat,
-} from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
+  HelpCircle,
+  Lock,
+  Fingerprint,
+  Banknote,
+  MessageCircle,
+} from "lucide-react"
 import Link from "next/link"
 
-export default function NFTInvestmentDashboard() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [investModalOpen, setInvestModalOpen] = useState(false)
-  const [withdrawModalOpen, setWithdrawModalOpen] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState(null)
-
-  const investmentPlans = [
-    {
-      id: 1,
-      name: "Starter NFT",
-      icon: Star,
-      minInvestment: 0.1,
-      maxInvestment: 5,
-      dailyReturn: 2.5,
-      duration: 30,
-      color: "bg-blue-500",
-      bgColor: "bg-blue-500/20",
-      textColor: "text-blue-400",
-      popular: false,
-    },
-    {
-      id: 2,
-      name: "Growth NFT",
-      icon: Zap,
-      minInvestment: 5,
-      maxInvestment: 50,
-      dailyReturn: 3.2,
-      duration: 45,
-      color: "bg-emerald-500",
-      bgColor: "bg-emerald-500/20",
-      textColor: "text-emerald-400",
-      popular: true,
-    },
-    {
-      id: 3,
-      name: "Premium NFT",
-      icon: Crown,
-      minInvestment: 50,
-      maxInvestment: 500,
-      dailyReturn: 4.1,
-      duration: 60,
-      color: "bg-orange-500",
-      bgColor: "bg-orange-500/20",
-      textColor: "text-orange-400",
-      popular: false,
-    },
-  ]
-
-  const favorites = [
-    {
-      name: "CryptoPunks",
-      symbol: "PUNK",
-      value: "$3,34,088",
-      change: "+5,485",
-      percentage: "+5.2%",
-      color: "bg-lime-400",
-      textColor: "text-gray-900",
-      isPositive: true,
-    },
-    {
-      name: "Bored Apes",
-      symbol: "BAYC",
-      value: "$7,34,048",
-      change: "-9,652",
-      percentage: "-9.65%",
-      color: "bg-orange-500",
-      textColor: "text-white",
-      isPositive: false,
-    },
-  ]
-
-  const portfolio = [
-    {
-      name: "CRYPTOPUNKS",
-      symbol: "PUNK",
-      value: "$240.86",
-      change: "+9.85%",
-      isPositive: true,
-      icon: "🎭",
-    },
-    {
-      name: "BORED APES",
-      symbol: "BAYC",
-      value: "$270.86",
-      change: "+0.65%",
-      isPositive: true,
-      icon: "🐵",
-    },
-    {
-      name: "AZUKI",
-      symbol: "AZUKI",
-      value: "$156.42",
-      change: "-2.15%",
-      isPositive: false,
-      icon: "🌸",
-    },
-  ]
-  const AppSidebar = () => (
-    <Sidebar>
-      <SidebarHeader className="p-4 bg-gradient-to-r from-gray-800 to-gray-900">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-emerald-400 to-lime-500 flex items-center justify-center">
-            <Shield className="h-4 w-4 text-white" />
-          </div>
-          <div>
-            <h2 className="font-bold text-white">NFT Invest</h2>
-            <p className="text-xs text-green-200">Dashboard</p>
-          </div>
-        </div>
-      </SidebarHeader>
-      <SidebarContent className="pt-4 bg-gradient-to-r from-gray-800 to-gray-900">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <Link href="/" className="w-full">
-              <SidebarMenuButton className="text-green-100 hover:bg-green-800/20 hover:text-white w-full">
-                <LayoutDashboard className="h-4 w-4" />
-                <span>Dashboard</span>
-              </SidebarMenuButton>
-            </Link>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <Link href="/team" className="w-full">
-              <SidebarMenuButton className="text-green-100 hover:bg-green-800/20 hover:text-white w-full">
-                <Users className="h-4 w-4" />
-                <span>Team</span>
-              </SidebarMenuButton>
-            </Link>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <Link href="/investments/log" className="w-full">
-              <SidebarMenuButton className="text-green-100 hover:bg-green-800/20 hover:text-white w-full">
-                <TrendingUp className="h-4 w-4" />
-                <span>Your Investments</span>
-              </SidebarMenuButton>
-            </Link>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <Link href="/deposit/log" className="w-full">
-              <SidebarMenuButton className="text-green-100 hover:bg-green-800/20 hover:text-white w-full">
-                <ArrowDownCircle className="h-4 w-4" />
-                <span>Deposit Records</span>
-              </SidebarMenuButton>
-            </Link>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <Link href="/withdraw/log" className="w-full">
-              <SidebarMenuButton className="text-green-100 hover:bg-green-800/20 hover:text-white w-full">
-                <ArrowUpCircle className="h-4 w-4" />
-                <span>Withdrawal Records</span>
-              </SidebarMenuButton>
-            </Link>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <Link href="/transactions/log" className="w-full">
-              <SidebarMenuButton className="text-green-100 hover:bg-green-800/20 hover:text-white w-full">
-                <Repeat className="h-4 w-4" />
-                <span>Transactions</span>
-              </SidebarMenuButton>
-            </Link>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarContent>
-    </Sidebar>
-  )
-
-  const InvestModal = () => (
-    <Dialog open={investModalOpen} onOpenChange={setInvestModalOpen}>
-      <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-gray-800 text-white">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-emerald-400" />
-            Invest in NFT Plan
-          </DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <div>
-            <Label className="text-gray-300">Select Investment Plan</Label>
-            <Select
-              onValueChange={(value) => setSelectedPlan(investmentPlans.find((p) => p.id === Number.parseInt(value)))}
-            >
-              <SelectTrigger className="bg-gray-800/50 border-gray-700 text-white">
-                <SelectValue placeholder="Choose a plan" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-800 border-gray-700">
-                {investmentPlans.map((plan) => (
-                  <SelectItem key={plan.id} value={plan.id.toString()} className="text-white hover:bg-gray-700">
-                    <div className="flex items-center gap-2">
-                      <plan.icon className="h-4 w-4" />
-                      {plan.name} - {plan.dailyReturn}% daily
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {selectedPlan && (
-            <div className="bg-gray-800/30 rounded-lg p-4 space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-400">Plan:</span>
-                <span className="text-white">{selectedPlan.name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Daily Return:</span>
-                <span className="text-green-400">{selectedPlan.dailyReturn}%</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Duration:</span>
-                <span className="text-white">{selectedPlan.duration} days</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Min - Max:</span>
-                <span className="text-white">
-                  {selectedPlan.minInvestment} - {selectedPlan.maxInvestment} ETH
-                </span>
-              </div>
-            </div>
-          )}
-
-          <div>
-            <Label className="text-gray-300">Investment Amount (ETH)</Label>
-            <Input
-              type="number"
-              placeholder="0.00"
-              className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
-            />
-          </div>
-
-          <div className="flex gap-3">
-            <Button
-              onClick={() => setInvestModalOpen(false)}
-              variant="outline"
-              className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-fuchsia-700"
-            >
-              Cancel
-            </Button>
-            <Button className="flex-1 bg-emerald-600 hover:bg-emerald-700">Invest Now</Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
-
-  const WithdrawModal = () => (
-    <Dialog open={withdrawModalOpen} onOpenChange={setWithdrawModalOpen}>
-      <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-gray-800 text-white">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Minus className="h-5 w-5 text-orange-400" />
-            Withdraw Funds
-          </DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <div className="bg-gray-800/30 rounded-lg p-4">
-            <div className="text-center">
-              <p className="text-gray-400 text-sm">Available Balance</p>
-              <p className="text-2xl font-bold text-white">45.8 ETH</p>
-              <p className="text-gray-400 text-sm">≈ $87,240</p>
-            </div>
-          </div>
-
-          <div>
-            <Label className="text-gray-300">Withdrawal Amount (ETH)</Label>
-            <Input
-              type="number"
-              placeholder="0.00"
-              className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
-            />
-          </div>
-
-          <div>
-            <Label className="text-gray-300">Wallet Address</Label>
-            <Input
-              placeholder="0x..."
-              className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
-            />
-          </div>
-
-          <div className="bg-gray-800/30 rounded-lg p-4">
-            <div className="flex justify-between mb-2">
-              <span className="text-gray-400">Network Fee:</span>
-              <span className="text-white">0.005 ETH</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">You'll Receive:</span>
-              <span className="text-white font-bold">0.00 ETH</span>
-            </div>
-          </div>
-
-          <div className="flex gap-3">
-            <Button
-              onClick={() => setWithdrawModalOpen(false)}
-              variant="outline"
-              className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-fuchsia-700"
-            >
-              Cancel
-            </Button>
-            <Button className="flex-1 bg-orange-600 hover:bg-orange-700">Withdraw</Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
-
+export default function page() {
   return (
-    <SidebarProvider>
-      <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-gray-800 to-green-900 flex">
-        <AppSidebar />
-        <div className="flex-1 flex flex-col">
-          <div className="flex-1 p-6 pb-32">
-            <div className="w-full">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <SidebarTrigger className="text-white" />
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage src="/placeholder.svg" />
-                    <AvatarFallback className="bg-emerald-600">E</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h1 className="text-white font-semibold">Hi, Evelin!</h1>
-                    <p className="text-gray-400 text-sm">Welcome back!</p>
-                  </div>
-                </div>
-                <Button variant="ghost" size="icon" className="text-white">
-                  <Bell className="h-5 w-5" />
-                </Button>
-              </div>
-              <Card className="bg-gray-950/30 border-green-800/50 mb-6">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-gray-400 text-sm">Total Value</span>
-                    <div className="flex items-center gap-1">
-                      <span className="text-green-400 text-sm">24% ↑</span>
-                      <TrendingUp className="h-4 w-4 text-green-400" />
-                    </div>
-                  </div>
-                  <div className="text-3xl font-bold text-white mb-4">$240,868.00</div>
-
-                  {/* Quick Action Buttons */}
-                  <div className="flex gap-3">
-                    <Button
-                      className="flex-1 bg-green-600/20 hover:bg-green-600/30 text-green-400 border border-green-600/30"
-                    >
-                      <Link
-                        className="w-full flex items-center gap-1"
-                        href={'/deposit'}
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Deposit
-                      </Link>
-                    </Button>
-                    <Button
-                      onClick={() => setWithdrawModalOpen(true)}
-                      className="flex-1 bg-orange-600/20 hover:bg-orange-600/30 text-orange-400 border border-orange-600/30"
-                    >
-                      <Minus className="h-4 w-4 mr-2" />
-                      Withdraw
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-              <div className="mb-6">
-                <h2 className="text-white text-lg font-semibold mb-4">NFT'S</h2>
-                <div className="space-y-3">
-                  {investmentPlans.map((plan) => (
-                    <Card key={plan.id} className="bg-gray-300/5 border-green-800/50 relative">
-                      {plan.popular && (
-                        <Badge className="absolute -top-2 -right-2 bg-orange-500 text-white z-10">Popular</Badge>
-                      )}
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-3">
-                            <div className={`p-2 ${plan.bgColor} rounded-lg`}>
-                              <plan.icon className={`h-4 w-4 ${plan.textColor}`} />
-                            </div>
-                            <div>
-                              <h3 className="font-semibold text-white">{plan.name}</h3>
-                              <p className="text-sm text-gray-400">{plan.duration} days</p>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-lg font-bold text-green-400">{plan.dailyReturn}%</p>
-                            <p className="text-xs text-gray-400">Daily</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="text-sm text-green-400">
-                            {plan.minInvestment} - {plan.maxInvestment} ETH
-                          </span>
-                          <Button
-                            onClick={() => {
-                              setSelectedPlan(plan)
-                              setInvestModalOpen(true)
-                            }}
-                            size="sm"
-                            className="bg-emerald-600 hover:bg-emerald-700"
-                          >
-                            BUY
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
+    <div className="h-[92vh] bg-gradient-to-br from-[gray-500] to-[gray-800] relative overflow-hidden flex flex-col">
+      {/* Background Video */}
+      <video
+        src="/bg-video.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0"
+      />
+      {/* Overlay (optional blur/tint) */}
+      <div className="absolute inset-0 z-0" />
+      {/* Content */}
+      <div className="relative z-10 flex flex-col justify-between flex-1 px-4 pb-6">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6 mt-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#008080] rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-lg">FB</span>
+            </div>
+            <div>
+              <h1 className="text-[#008080] font-bold text-xl">faysalbank</h1>
+              <p className="text-gray-200 text-sm">12.0.44</p>
             </div>
           </div>
-          <div className="fixed bottom-4 flex items-center justify-center w-full z-50">
-            <Card className="bg-gray-900/90 backdrop-blur-xl border-green-800/50">
-              <CardContent className="px-3 py-1">
-                <div className="flex items-center gap-6">
-                  <Button variant="ghost" size="icon" className="text-emerald-400">
-                    <Home className="h-5 w-5" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
-                    <BarChart3 className="h-5 w-5" />
-                  </Button>
-                  <Button
-                    onClick={() => setInvestModalOpen(true)}
-                    size="icon"
-                    className="bg-white text-gray-900 rounded-full w-12 h-12 hover:bg-gray-100"
-                  >
-                    <TrendingUp className="h-5 w-5" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
-                    <CreditCard className="h-5 w-5" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
-                    <Settings className="h-5 w-5" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full bg-white/50 text-gray-700 hover:bg-white/70"
+          >
+            <HelpCircle className="h-5 w-5" />
+          </Button>
+        </div>
+        <div>
+          {/* Login Section */}
+          <div className="w-full max-w-xs mx-auto flex flex-col items-center gap-4 mb-4">
+            <div className="w-full flex justify-center gap-3 items-center">
+              <Link href={'/login'} className="flex-1">
+                <Button className="w-full bg-green-400 text-white text-lg font-semibold py-7 rounded-xl shadow-lg hover:bg-[#006666]">
+                  Login
+                </Button>
+              </Link>
+              <Button
+                variant="outline"
+                className="w-12 h-14 rounded-xl bg-gray-900/80 border-none shadow-lg flex items-center justify-center text-white hover:bg-white/70"
+              >
+                <Lock className="h-8 w-8" />
+              </Button>
+              <Button
+                variant="outline"
+                className="w-12 h-14 rounded-xl bg-gray-900/80 border-none shadow-lg flex items-center justify-center text-white hover:bg-white/70"
+              >
+                <Fingerprint className="h-8 w-8" />
+              </Button>
+            </div>
+          </div>
+          {/* Register Section */}
+          <div className="w-full max-w-xs mx-auto flex flex-col items-center gap-4 mb-4">
+            <div className="w-full flex justify-center gap-3 items-center">
+              <Link href={'/register'} className="flex-1">
+                <Button className="w-full bg-gray-800 hover:bg-gray-800/30 py-7 border-b-amber-50 text-white border border-gray-800/30">
+                  Register
+                </Button>
+              </Link>
+              <Button
+                variant="outline"
+                className="w-12 h-14 rounded-xl bg-gray-900/80 border-none shadow-lg flex items-center justify-center text-white hover:bg-white/70"
+              >
+                <Banknote className="h-8 w-8" />
+              </Button>
+              <Button
+                variant="outline"
+                className="w-12 h-14 rounded-xl bg-gray-900/80 border-none shadow-lg flex items-center justify-center text-white hover:bg-white/70"
+              >
+                <MessageCircle className="h-8 w-8" />
+              </Button>
+            </div>
+          </div>
+          {/* Social Buttons */}
+          <div className="w-full max-w-xs mx-auto flex flex-col gap-3">
+            <Button
+              variant="outline"
+              disabled
+              className="w-full border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-800"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="mr-2 h-4 w-4">
+                <path
+                  d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
+                  fill="currentColor"
+                />
+              </svg>
+              Sign up with Apple
+            </Button>
+            <Button
+              variant="outline"
+              disabled
+              className="w-full border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-800"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="mr-2 h-4 w-4">
+                <path
+                  d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
+                  fill="currentColor"
+                />
+              </svg>
+              Sign up with Google
+            </Button>
           </div>
         </div>
-        <InvestModal />
-        <WithdrawModal />
       </div>
-    </SidebarProvider>
+    </div>
   )
 }

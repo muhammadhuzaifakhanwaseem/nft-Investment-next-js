@@ -18,7 +18,7 @@ export default function RegisterForm({ className, ...props }) {
             <Card className="w-full max-w-sm bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
                 <CardHeader className="text-center">
                     <CardTitle className="text-xl text-white">Create an Account</CardTitle>
-                    <CardDescription className="text-gray-400">Enter your details to get started</CardDescription>
+                    <CardDescription className="text-green-400">Register with your mobile number</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form>
@@ -70,7 +70,7 @@ export default function RegisterForm({ className, ...props }) {
                                 />
                             </div>
                             <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">
-                                Sign Up
+                                Register
                             </Button>
                         </div>
                         <div className="text-center text-sm text-gray-400 mt-6">

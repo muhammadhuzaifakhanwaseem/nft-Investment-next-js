@@ -13,8 +13,8 @@ export default function LoginForm({ className, ...props }) {
       <Card className="w-full max-w-sm bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
         <CardHeader className="text-center">
           <CardTitle className="text-xl text-white">Welcome back</CardTitle>
-          <CardDescription className="text-gray-400">
-            Login with your Apple or Google account
+          <CardDescription className="text-green-400">
+            Login with your mobile number
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -41,7 +41,7 @@ export default function LoginForm({ className, ...props }) {
               <div className="text-center text-sm text-gray-400">
                 Don&apos;t have an account?{" "}
                 <Link href="/register" className="underline underline-offset-4 text-green-400">
-                  Sign up
+                  Regsiter
                 </Link>
               </div>
               <div

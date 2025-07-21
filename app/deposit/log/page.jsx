@@ -49,7 +49,6 @@ export default function LogPage() {
             status: "success",
         },
     ]
-
     const getStatusColor = (status) => {
         switch (status) {
             case "success":
@@ -64,7 +63,6 @@ export default function LogPage() {
                 return "text-gray-400"
         }
     }
-
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4">
             <div className="max-w-4xl mx-auto">
