@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   Home,
   BarChart3,
@@ -14,19 +14,8 @@ import {
   User,
   Menu,
   X,
-  PiggyBank, ShieldCheck, TrendingU
 } from "lucide-react"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -37,51 +26,26 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 
 import Link from "next/link"
 import SuccessAlert from "@/components/success-alert"
+import { useUser } from "../context/UserContext"
+import axios from "axios"
 
 export default function NFTInvestmentDashboard() {
+
   const [investModalOpen, setInvestModalOpen] = useState(false)
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState(null)
+  const [investmentPlans, setPlans] = useState(null)
 
-  const investmentPlans = [
-    {
-      id: 1,
-      name: "120 Days Plan",
-      duration: 120,
-      minInvestment: "10,000",
-      maxInvestment: "1,000,000",
-      dailyReturn: "780.00",
-      capitalReturn: true,
-      popular: true,
-      bgColor: "bg-orange-800/80",
-      textColor: "text-white",
-      icon: TrendingUp,
-    },
-    {
-      id: 2,
-      name: "90 Days Plan",
-      duration: 90,
-      minInvestment: "10,000",
-      maxInvestment: "500,000",
-      dailyReturn: "450.00",
-      capitalReturn: true,
-      bgColor: "bg-purple-700/80",
-      textColor: "text-white",
-      icon: ShieldCheck,
-    },
-    {
-      id: 3,
-      name: "60 Days Plan",
-      duration: 60,
-      minInvestment: "10,000",
-      maxInvestment: "200,000",
-      dailyReturn: "264.00",
-      capitalReturn: true,
-      bgColor: "bg-green-700/80",
-      textColor: "text-white",
-      icon: PiggyBank,
-    },
-  ]
+  function fetchPlans() {
+    axios.get('https://stocktitan.site/api/plans').then((res) => {
+      setPlans(res?.data?.plans)
+      console.log(res?.data?.plans)
+    })
+  }
+
+  useEffect(() => {
+    fetchPlans();
+  }, []);
 
   const InvestModal = () => (
     <Dialog open={investModalOpen} onOpenChange={setInvestModalOpen}>
@@ -219,6 +183,8 @@ export default function NFTInvestmentDashboard() {
     { url: "/team", title: "My Team" },
   ]
 
+  const { user, logout } = useUser()
+
   return (
     <>
       <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-gray-800 to-green-900 flex">
@@ -231,17 +197,19 @@ export default function NFTInvestmentDashboard() {
         <div
           className={`fixed inset-y-0 my-auto h-[80%] ${isOpen ? 'left-[0]' : '-left-[100%]'} w-72 bg-gray-900 backdrop-blur-xl border-r border-green-500/40 rounded-r-3xl p-4 flex flex-col z-30 duration-300`}
         >
-          <div className="flex border-b-1 pb-4 border-green-400 items-center gap-3 mb-4">
-            <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center">
-              <User className="w-8 h-8 text-gray-500" />
-            </div>
-            <div>
-              <h2 className="text-base font-semibold text-white leading-5">
-                MUHAMMAD TAHIR IMRAN
-              </h2>
-              <p className="text-sm text-gray-400">0002692412</p>
-            </div>
-          </div>
+          {user ?
+            <div className="flex border-b-1 pb-4 border-green-400 items-center gap-3 mb-4">
+              <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center">
+                <User className="w-8 h-8 text-gray-500" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold text-white leading-5">
+                  {user?.username}
+                </h2>
+                <p className="text-sm text-gray-400">{user.phone}</p>
+              </div>
+            </div> : ""
+          }
           <div className="flex flex-col gap-3 text-md text-white">
             {menuItems.map((item, i) => (
               <Link
@@ -253,7 +221,7 @@ export default function NFTInvestmentDashboard() {
               </Link>
             ))}
           </div>
-          <button className="mt-auto flex items-center gap-2 text-red-400 hover:text-red-400 font-medium">
+          <button onClick={logout} className="mt-auto flex items-center gap-2 text-red-400 hover:text-red-400 font-medium">
             <LogOut className="w-5 h-5" />
             Logout
           </button>
@@ -267,10 +235,10 @@ export default function NFTInvestmentDashboard() {
 
                   <Avatar className="w-10 h-10">
                     <AvatarImage src="/placeholder.svg" />
-                    <AvatarFallback className="bg-emerald-600">E</AvatarFallback>
+                    <AvatarFallback className="bg-emerald-600 capitalize">{user?.username?.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <h1 className="text-white font-semibold">Hi, Evelin!</h1>
+                    <h1 className="text-white font-semibold">Hi, {user?.username}!</h1>
                     <p className="text-gray-400 text-sm">Welcome back!</p>
                   </div>
                 </div>
@@ -284,13 +252,13 @@ export default function NFTInvestmentDashboard() {
               <Card className="bg-gray-950/30 border-green-800/50 mb-6">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-gray-400 text-sm">Total Value</span>
+                    <span className="text-gray-400 text-sm">Balance</span>
                     <div className="flex items-center gap-1">
                       <span className="text-green-400 text-sm">24% ↑</span>
                       <TrendingUp className="h-4 w-4 text-green-400" />
                     </div>
                   </div>
-                  <div className="text-3xl font-bold text-white mb-4">$240,868.00</div>
+                  <div className="text-3xl font-bold text-white mb-4">PKR {Number(user?.balance ?? 0).toFixed(2)}</div>
 
                   {/* Quick Action Buttons */}
                   <div className="flex gap-3">
@@ -316,32 +284,31 @@ export default function NFTInvestmentDashboard() {
                 </CardContent>
               </Card>
               <div className="mb-6">
-                <h2 className="text-white text-lg font-semibold mb-4">NFT'S</h2>
+                <h2 className="text-white text-lg font-semibold mb-4">Investment Opportunities</h2>
                 <div className="space-y-3">
-                  {investmentPlans.map((plan) => (
+                  {investmentPlans?.length ? investmentPlans.map((plan) => (
                     <Card key={plan.id} className="bg-white/5 backdrop-blur-md border border-green-800/30 relative rounded-2xl">
-                      {plan.popular && (
-                        <Badge className="absolute -top-2 -right-2 bg-orange-500 text-white z-10">Popular</Badge>
-                      )}
+                      <Badge className="absolute -top-2 -right-2 bg-orange-500 text-white z-10">Popular</Badge>
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
-                            <div className={`p-2 ${plan.bgColor} rounded-lg`}>
-                              <plan.icon className={`h-5 w-5 ${plan.textColor}`} />
+                            <div className={`p-2 bg-green-700 rounded-lg`}>
+                              <TrendingUp className={`h-5 w-5 text-white`} />
                             </div>
                             <div>
-                              <h3 className="font-semibold text-white">{plan.name}</h3>
-                              <p className="text-sm text-gray-400">Every {plan.duration} days</p>
+                              <h3 className="font-semibold text-white">{plan.plan_name}</h3>
+                              <p className="text-sm text-gray-400">{plan.time?.name}</p>
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="text-lg font-bold text-green-400">{plan.dailyReturn}%</p>
-                            <p className="text-xs text-gray-400">Accumulated</p>
+                            <p className="text-lg font-bold text-green-400">{Number(plan.return_interest ?? 0).toFixed(0)}%</p>
+                            <p className="text-xs text-gray-400">{plan?.how_many_time > 1 ? "Daily" : "Accumulated"}</p>
+                            {/* <p className="text-xs text-gray-400">Percent</p> */}
                           </div>
                         </div>
                         <div className="flex items-center justify-between mb-3">
                           <span className="text-sm text-green-400">
-                            {plan.minInvestment} to {plan.maxInvestment}
+                            PKR {Number(plan.minimum_amount ?? 0).toFixed(0)} <span className="text-white">to</span> PKR {Number(plan.maximum_amount ?? 0).toFixed(0)}
                           </span>
                           <Button
                             onClick={() => {
@@ -356,11 +323,11 @@ export default function NFTInvestmentDashboard() {
                         </div>
                         <p className="text-xs text-gray-400">
                           Capital Return:{" "}
-                          <span className="text-emerald-400 font-medium">{plan.capitalReturn ? "Yes" : "No"}</span>
+                          <span className="text-emerald-400 font-medium">{plan.capital_back ? "Yes" : "No"}</span>
                         </p>
                       </CardContent>
                     </Card>
-                  ))}
+                  )) : "Loading Plans"}
                 </div>
               </div>
             </div>
