@@ -29,12 +29,146 @@ import SuccessAlert from "@/components/success-alert"
 import { useUser } from "../context/UserContext"
 import axios from "axios"
 
+const InvestModal = ({ balance, investModalOpen, setInvestModalOpen, selectedPlan, investAmount, setInvestAmount }) => (
+  <Dialog open={investModalOpen} onOpenChange={setInvestModalOpen}>
+    <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-green-400/35 text-white">
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-2">
+          <TrendingUp className="h-5 w-5 text-emerald-400" />
+          {selectedPlan?.plan_name}
+        </DialogTitle>
+      </DialogHeader>
+      <div className="space-y-4">
+        {selectedPlan && (
+          <div className="bg-gray-800/30 rounded-lg p-4 space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-gray-400">Your Balance:</span>
+              <span className="text-green-400">PKR {balance}</span>
+            </div>
+            {investAmount ?
+              <div className="flex justify-between">
+                <span className="text-gray-400">Daily Profit:</span>
+                <span className="text-green-400">{investAmount * Number(selectedPlan?.return_interest ?? 0).toFixed(0) / 100}</span>
+              </div>
+              : ""}
+            {investAmount ?
+              <div className="flex justify-between">
+                <span className="text-gray-400">Total Profit:</span>
+                <span className="text-green-400">0PKR</span>
+              </div>
+              : ""}
+            <div className="flex justify-between">
+              <span className="text-gray-400">Duration:</span>
+              <span className="text-white">{selectedPlan.time?.name}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Min:</span>
+              <span className="text-white">
+                PKR {Number(selectedPlan.minimum_amount ?? 0).toFixed(0)}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Max:</span>
+              <span className="text-white">
+                PKR {Number(selectedPlan.maximum_amount ?? 0).toFixed(0)}
+              </span>
+            </div>
+          </div>
+        )}
+
+        <div>
+          <Label className="text-gray-300 mb-3 text-sm">Investment Amount (PKR)</Label>
+          <Input
+            type="number"
+            placeholder="0.00"
+            onChange={(e) => setInvestAmount(Number(e.target.value))}
+            value={investAmount || 0}
+            className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
+          />
+        </div>
+
+        <div className="flex gap-3">
+          <Button
+            onClick={() => setInvestModalOpen(false)}
+            className="flex-1 bg-gray-600 hover:bg-gray-700"
+          >
+            Cancel
+          </Button>
+          <Button disabled={investAmount < Number(selectedPlan?.minimum_amount ?? 0).toFixed(0) || investAmount > Number(selectedPlan?.maximum_amount ?? 0).toFixed(0) ? true : false} className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-green-700">Invest Now</Button>
+        </div>
+      </div>
+    </DialogContent>
+  </Dialog>
+)
+
+const WithdrawModal = ({ withdrawModalOpen, setWithdrawModalOpen }) => (
+  <Dialog open={withdrawModalOpen} onOpenChange={setWithdrawModalOpen}>
+    <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-green-400/35 text-white">
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-2">
+          <Minus className="h-5 w-5 text-orange-400" />
+          Withdraw Funds
+        </DialogTitle>
+      </DialogHeader>
+      <div className="space-y-4">
+        <div className="bg-gray-800/30 rounded-lg p-4">
+          <div className="text-center">
+            <p className="text-gray-400 text-sm">Available Balance</p>
+            <p className="text-2xl font-bold text-white">45.8 ETH</p>
+            <p className="text-gray-400 text-sm">≈ $87,240</p>
+          </div>
+        </div>
+
+        <div>
+          <Label className="text-gray-300">Withdrawal Amount (ETH)</Label>
+          <Input
+            type="number"
+            placeholder="0.00"
+            className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
+          />
+        </div>
+
+        <div>
+          <Label className="text-gray-300">Wallet Address</Label>
+          <Input
+            placeholder="0x..."
+            className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
+          />
+        </div>
+
+        <div className="bg-gray-800/30 rounded-lg p-4">
+          <div className="flex justify-between mb-2">
+            <span className="text-gray-400">Network Fee:</span>
+            <span className="text-white">0.005 ETH</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-400">You'll Receive:</span>
+            <span className="text-white font-bold">0.00 ETH</span>
+          </div>
+        </div>
+
+        <div className="flex gap-3">
+          <Button
+            onClick={() => setWithdrawModalOpen(false)}
+            variant="outline"
+            className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-fuchsia-700"
+          >
+            Cancel
+          </Button>
+          <Button className="flex-1 bg-orange-600 hover:bg-orange-700">Withdraw</Button>
+        </div>
+      </div>
+    </DialogContent>
+  </Dialog>
+)
+
 export default function NFTInvestmentDashboard() {
 
   const [investModalOpen, setInvestModalOpen] = useState(false)
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [investmentPlans, setPlans] = useState(null)
+  const [investAmount, setInvestAmount] = useState()
 
   function fetchPlans() {
     axios.get('https://stocktitan.site/api/plans').then((res) => {
@@ -46,128 +180,6 @@ export default function NFTInvestmentDashboard() {
   useEffect(() => {
     fetchPlans();
   }, []);
-
-  const InvestModal = () => (
-    <Dialog open={investModalOpen} onOpenChange={setInvestModalOpen}>
-      <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-green-400/35 text-white">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-emerald-400" />
-            Invest in NFT Plan
-          </DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          {selectedPlan && (
-            <div className="bg-gray-800/30 rounded-lg p-4 space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-400">Plan:</span>
-                <span className="text-white">{selectedPlan.name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Daily Profit:</span>
-                <span className="text-green-400">0PKR</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Total Profit:</span>
-                <span className="text-green-400">0PKR</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Duration:</span>
-                <span className="text-white">{selectedPlan.duration} days</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Min - Max:</span>
-                <span className="text-white">
-                  {selectedPlan.minInvestment} - {selectedPlan.maxInvestment} ETH
-                </span>
-              </div>
-            </div>
-          )}
-
-          <div>
-            <Label className="text-gray-300 mb-3">Investment Amount (PKR)</Label>
-            <Input
-              type="number"
-              placeholder="0.00"
-              className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
-            />
-          </div>
-
-          <div className="flex gap-3">
-            <Button
-              onClick={() => setInvestModalOpen(false)}
-              variant="outline"
-              className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-fuchsia-700"
-            >
-              Cancel
-            </Button>
-            <Button className="flex-1 bg-emerald-600 hover:bg-emerald-700">Invest Now</Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
-
-  const WithdrawModal = () => (
-    <Dialog open={withdrawModalOpen} onOpenChange={setWithdrawModalOpen}>
-      <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-green-400/35 text-white">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Minus className="h-5 w-5 text-orange-400" />
-            Withdraw Funds
-          </DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <div className="bg-gray-800/30 rounded-lg p-4">
-            <div className="text-center">
-              <p className="text-gray-400 text-sm">Available Balance</p>
-              <p className="text-2xl font-bold text-white">45.8 ETH</p>
-              <p className="text-gray-400 text-sm">≈ $87,240</p>
-            </div>
-          </div>
-
-          <div>
-            <Label className="text-gray-300">Withdrawal Amount (ETH)</Label>
-            <Input
-              type="number"
-              placeholder="0.00"
-              className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
-            />
-          </div>
-
-          <div>
-            <Label className="text-gray-300">Wallet Address</Label>
-            <Input
-              placeholder="0x..."
-              className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
-            />
-          </div>
-
-          <div className="bg-gray-800/30 rounded-lg p-4">
-            <div className="flex justify-between mb-2">
-              <span className="text-gray-400">Network Fee:</span>
-              <span className="text-white">0.005 ETH</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">You'll Receive:</span>
-              <span className="text-white font-bold">0.00 ETH</span>
-            </div>
-          </div>
-
-          <div className="flex gap-3">
-            <Button
-              onClick={() => setWithdrawModalOpen(false)}
-              variant="outline"
-              className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-fuchsia-700"
-            >
-              Cancel
-            </Button>
-            <Button className="flex-1 bg-orange-600 hover:bg-orange-700">Withdraw</Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -297,13 +309,12 @@ export default function NFTInvestmentDashboard() {
                             </div>
                             <div>
                               <h3 className="font-semibold text-white">{plan.plan_name}</h3>
-                              <p className="text-sm text-gray-400">{plan.time?.name}</p>
+                              <p className="text-sm text-gray-400">{plan?.time?.name}</p>
                             </div>
                           </div>
                           <div className="text-right">
                             <p className="text-lg font-bold text-green-400">{Number(plan.return_interest ?? 0).toFixed(0)}%</p>
-                            <p className="text-xs text-gray-400">{plan?.how_many_time > 1 ? "Daily" : "Accumulated"}</p>
-                            {/* <p className="text-xs text-gray-400">Percent</p> */}
+                            <p className="text-xs text-gray-400">{plan?.how_many_time > 1 ? "Daily Profit" : "Accumulated Profit"}</p>
                           </div>
                         </div>
                         <div className="flex items-center justify-between mb-3">
@@ -312,13 +323,16 @@ export default function NFTInvestmentDashboard() {
                           </span>
                           <Button
                             onClick={() => {
+                              Number(user?.balance ?? 0).toFixed(0) < Number(plan.minimum_amount ?? 0).toFixed(0) ? 
+                              alert('Insufficient Balance')
+                              : 
                               setSelectedPlan(plan)
-                              setInvestModalOpen(true)
+                              setInvestModalOpen(Number(user?.balance ?? 0).toFixed(0) < Number(plan.minimum_amount ?? 0).toFixed(0) ? false : true)
                             }}
                             size="sm"
-                            className="bg-emerald-600 hover:bg-emerald-700"
+                            className={`bg-emerald-600 hover:bg-emerald-700`}
                           >
-                            BUY
+                            Buy
                           </Button>
                         </div>
                         <p className="text-xs text-gray-400">
@@ -327,7 +341,13 @@ export default function NFTInvestmentDashboard() {
                         </p>
                       </CardContent>
                     </Card>
-                  )) : "Loading Plans"}
+                  )) : <div className="border border-gray-200 rounded-lg shadow animate-pulse md:p-6 dark:border-gray-700">
+                    <div className="flex items-center justify-center h-48 mb-4 bg-gray-300 rounded dark:bg-gray-700"></div>
+                    <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
+                    <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+                    <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+                    <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                  </div>}
                 </div>
               </div>
             </div>
@@ -360,8 +380,8 @@ export default function NFTInvestmentDashboard() {
             </Card>
           </div>
         </div>
-        <InvestModal />
-        <WithdrawModal />
+        <InvestModal balance={Number(user?.balance ?? 0).toFixed(0)} setInvestAmount={setInvestAmount} investAmount={investAmount} setInvestModalOpen={setInvestModalOpen} investModalOpen={investModalOpen} selectedPlan={selectedPlan} />
+        <WithdrawModal withdrawModalOpen={withdrawModalOpen} setWithdrawModalOpen={setWithdrawModalOpen} />
       </div>
       {/* <SuccessAlert isOpen /> */}
     </>
