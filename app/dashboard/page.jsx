@@ -20,147 +20,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 import Link from "next/link"
 import SuccessAlert from "@/components/success-alert"
 import { useUser } from "../context/UserContext"
 import axios from "axios"
-
-const InvestModal = ({ balance, investModalOpen, setInvestModalOpen, selectedPlan, investAmount, setInvestAmount }) => (
-  <Dialog open={investModalOpen} onOpenChange={setInvestModalOpen}>
-    <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-green-400/35 text-white">
-      <DialogHeader>
-        <DialogTitle className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-emerald-400" />
-          {selectedPlan?.plan_name}
-        </DialogTitle>
-      </DialogHeader>
-      <div className="space-y-4">
-        {selectedPlan && (
-          <div className="bg-gray-800/30 rounded-lg p-4 space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-400">Your Balance:</span>
-              <span className="text-green-400">PKR {balance}</span>
-            </div>
-            {investAmount ?
-              <div className="flex justify-between">
-                <span className="text-gray-400">Daily Profit:</span>
-                <span className="text-green-400">{investAmount * Number(selectedPlan?.return_interest ?? 0).toFixed(0) / 100}</span>
-              </div>
-              : ""}
-            {investAmount ?
-              <div className="flex justify-between">
-                <span className="text-gray-400">Total Profit:</span>
-                <span className="text-green-400">0PKR</span>
-              </div>
-              : ""}
-            <div className="flex justify-between">
-              <span className="text-gray-400">Duration:</span>
-              <span className="text-white">{selectedPlan.time?.name}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Min:</span>
-              <span className="text-white">
-                PKR {Number(selectedPlan.minimum_amount ?? 0).toFixed(0)}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Max:</span>
-              <span className="text-white">
-                PKR {Number(selectedPlan.maximum_amount ?? 0).toFixed(0)}
-              </span>
-            </div>
-          </div>
-        )}
-
-        <div>
-          <Label className="text-gray-300 mb-3 text-sm">Investment Amount (PKR)</Label>
-          <Input
-            type="number"
-            placeholder="0.00"
-            onChange={(e) => setInvestAmount(Number(e.target.value))}
-            value={investAmount || 0}
-            className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
-          />
-        </div>
-
-        <div className="flex gap-3">
-          <Button
-            onClick={() => setInvestModalOpen(false)}
-            className="flex-1 bg-gray-600 hover:bg-gray-700"
-          >
-            Cancel
-          </Button>
-          <Button disabled={investAmount < Number(selectedPlan?.minimum_amount ?? 0).toFixed(0) || investAmount > Number(selectedPlan?.maximum_amount ?? 0).toFixed(0) ? true : false} className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-green-700">Invest Now</Button>
-        </div>
-      </div>
-    </DialogContent>
-  </Dialog>
-)
-
-const WithdrawModal = ({ withdrawModalOpen, setWithdrawModalOpen }) => (
-  <Dialog open={withdrawModalOpen} onOpenChange={setWithdrawModalOpen}>
-    <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-green-400/35 text-white">
-      <DialogHeader>
-        <DialogTitle className="flex items-center gap-2">
-          <Minus className="h-5 w-5 text-orange-400" />
-          Withdraw Funds
-        </DialogTitle>
-      </DialogHeader>
-      <div className="space-y-4">
-        <div className="bg-gray-800/30 rounded-lg p-4">
-          <div className="text-center">
-            <p className="text-gray-400 text-sm">Available Balance</p>
-            <p className="text-2xl font-bold text-white">45.8 ETH</p>
-            <p className="text-gray-400 text-sm">≈ $87,240</p>
-          </div>
-        </div>
-
-        <div>
-          <Label className="text-gray-300">Withdrawal Amount (ETH)</Label>
-          <Input
-            type="number"
-            placeholder="0.00"
-            className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
-          />
-        </div>
-
-        <div>
-          <Label className="text-gray-300">Wallet Address</Label>
-          <Input
-            placeholder="0x..."
-            className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
-          />
-        </div>
-
-        <div className="bg-gray-800/30 rounded-lg p-4">
-          <div className="flex justify-between mb-2">
-            <span className="text-gray-400">Network Fee:</span>
-            <span className="text-white">0.005 ETH</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">You'll Receive:</span>
-            <span className="text-white font-bold">0.00 ETH</span>
-          </div>
-        </div>
-
-        <div className="flex gap-3">
-          <Button
-            onClick={() => setWithdrawModalOpen(false)}
-            variant="outline"
-            className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-fuchsia-700"
-          >
-            Cancel
-          </Button>
-          <Button className="flex-1 bg-orange-600 hover:bg-orange-700">Withdraw</Button>
-        </div>
-      </div>
-    </DialogContent>
-  </Dialog>
-)
+import WithdrawModal from './../../components/WithdrawModal';
+import Cookies from "js-cookie"
+import InvestModal from "@/components/InvestModal"
 
 export default function NFTInvestmentDashboard() {
 
@@ -195,8 +62,18 @@ export default function NFTInvestmentDashboard() {
     { url: "/team", title: "My Team" },
   ]
 
-  const { user, logout } = useUser()
+  const [token, setToken] = useState("");
 
+  useEffect(() => {
+    const authToken = Cookies.get("auth_token");
+    setToken(authToken || "");
+  }, []);
+
+  const { user, logout, loading } = useUser()
+
+  if (loading) return <div className="flex items-center justify-center h-screen bg-gray-100">
+    <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+  </div>
   return (
     <>
       <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-gray-800 to-green-900 flex">
@@ -323,10 +200,10 @@ export default function NFTInvestmentDashboard() {
                           </span>
                           <Button
                             onClick={() => {
-                              Number(user?.balance ?? 0).toFixed(0) < Number(plan.minimum_amount ?? 0).toFixed(0) ? 
-                              alert('Insufficient Balance')
-                              : 
-                              setSelectedPlan(plan)
+                              Number(user?.balance ?? 0).toFixed(0) < Number(plan.minimum_amount ?? 0).toFixed(0) ?
+                                alert('Insufficient Balance')
+                                :
+                                setSelectedPlan(plan)
                               setInvestModalOpen(Number(user?.balance ?? 0).toFixed(0) < Number(plan.minimum_amount ?? 0).toFixed(0) ? false : true)
                             }}
                             size="sm"
@@ -381,7 +258,7 @@ export default function NFTInvestmentDashboard() {
           </div>
         </div>
         <InvestModal balance={Number(user?.balance ?? 0).toFixed(0)} setInvestAmount={setInvestAmount} investAmount={investAmount} setInvestModalOpen={setInvestModalOpen} investModalOpen={investModalOpen} selectedPlan={selectedPlan} />
-        <WithdrawModal withdrawModalOpen={withdrawModalOpen} setWithdrawModalOpen={setWithdrawModalOpen} />
+        <WithdrawModal withdrawModalOpen={withdrawModalOpen} setWithdrawModalOpen={setWithdrawModalOpen} loginToken={token} />
       </div>
       {/* <SuccessAlert isOpen /> */}
     </>

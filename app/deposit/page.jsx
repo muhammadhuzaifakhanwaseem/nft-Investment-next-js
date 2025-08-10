@@ -1,12 +1,14 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ArrowLeft, Copy, Check, Upload, ArrowRight, Building, CreditCard, Receipt } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
+import Cookies from "js-cookie"
+import { redirect } from "next/navigation"
 
 export default function DepositPage() {
   const [currentStep, setCurrentStep] = useState(1)
@@ -43,17 +45,47 @@ export default function DepositPage() {
     }
   }
 
-  const handleSubmit = () => {
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    const authToken = Cookies.get("auth_token");
+    setToken(authToken || "");
+  }, []);
+
+  const handleSubmit = async () => {
     if (!amount || !uploadedFile) {
-      alert("Please enter amount and upload receipt")
-      return
+      alert("Please enter amount and upload receipt");
+      return;
     }
-    alert("Deposit request submitted successfully!")
-    // Reset form or redirect
-    setCurrentStep(1)
-    setAmount("")
-    setUploadedFile(null)
-  }
+
+    try {
+      const formData = new FormData();
+      formData.append("login_token", token);
+      formData.append("amount", amount);
+      formData.append("is_mine", 0); // optional
+      formData.append("payment_proof", uploadedFile);
+
+      const res = await fetch("https://stocktitan.site/api/deposit", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert(data.message || "Deposit request submitted successfully!");
+        setCurrentStep(1);
+        setAmount("");
+        setUploadedFile(null);
+        redirect("/dashboard/deposit/log");
+      } else {
+        alert(data.message || "Something went wrong");
+      }
+    } catch (error) {
+      console.error("Error submitting deposit:", error);
+      alert("Failed to submit deposit");
+    }
+  };
 
   const getStepIcon = (step) => {
     switch (step) {
@@ -106,9 +138,8 @@ export default function DepositPage() {
             {[1, 2, 3].map((step) => (
               <div key={step} className="flex items-center">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                    step <= currentStep ? "bg-emerald-600 text-white" : "bg-gray-700 text-gray-400"
-                  }`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step <= currentStep ? "bg-emerald-600 text-white" : "bg-gray-700 text-gray-400"
+                    }`}
                 >
                   {step}
                 </div>

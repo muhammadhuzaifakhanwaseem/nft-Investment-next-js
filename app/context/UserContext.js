@@ -9,6 +9,7 @@ const UserContext = createContext()
 export function UserProvider({ children }) {
   const router = useRouter()
   const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   const fetchUser = async () => {
     try {
@@ -31,6 +32,7 @@ export function UserProvider({ children }) {
     } catch (err) {
       setUser(null)
     } finally {
+      setLoading(false)
     }
   }
 
@@ -46,7 +48,7 @@ export function UserProvider({ children }) {
   }
 
   return (
-    <UserContext.Provider value={{ user, setUser, logout }}>
+    <UserContext.Provider value={{ user, setUser, logout, loading }}>
       {children}
     </UserContext.Provider>
   )
