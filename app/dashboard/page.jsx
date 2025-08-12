@@ -40,7 +40,6 @@ export default function NFTInvestmentDashboard() {
   function fetchPlans() {
     axios.get('https://stocktitan.site/api/plans').then((res) => {
       setPlans(res?.data?.plans)
-      console.log(res?.data?.plans)
     })
   }
 
@@ -64,16 +63,46 @@ export default function NFTInvestmentDashboard() {
 
   const [token, setToken] = useState("");
 
+  const { logout } = useUser()
+
+  const [loading, setLoading] = useState(true)
+
+  const [user, setUser] = useState(null)
+
+  const fetchUser = async () => {
+    try {
+      const res = await fetch("https://stocktitan.site/api/user", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setUser(data.user)
+      } else {
+        setUser(null)
+      }
+    } catch (err) {
+      setUser(null)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     const authToken = Cookies.get("auth_token");
     setToken(authToken || "");
   }, []);
 
-  const { user, logout, loading } = useUser()
+  useEffect(() => {
+    if (!token) return;
+    fetchUser();
+  }, [token]);
 
   if (loading) return <div className="flex items-center justify-center h-screen bg-gray-100">
     <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
   </div>
+
   return (
     <>
       <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-gray-800 to-green-900 flex">
@@ -86,19 +115,17 @@ export default function NFTInvestmentDashboard() {
         <div
           className={`fixed inset-y-0 my-auto h-[80%] ${isOpen ? 'left-[0]' : '-left-[100%]'} w-72 bg-gray-900 backdrop-blur-xl border-r border-green-500/40 rounded-r-3xl p-4 flex flex-col z-30 duration-300`}
         >
-          {user ?
-            <div className="flex border-b-1 pb-4 border-green-400 items-center gap-3 mb-4">
-              <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center">
-                <User className="w-8 h-8 text-gray-500" />
-              </div>
-              <div>
-                <h2 className="text-base font-semibold text-white leading-5">
-                  {user?.username}
-                </h2>
-                <p className="text-sm text-gray-400">{user.phone}</p>
-              </div>
-            </div> : ""
-          }
+          <div className="flex border-b-1 pb-4 border-green-400 items-center gap-3 mb-4">
+            <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center">
+              <User className="w-8 h-8 text-gray-500" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold text-white leading-5">
+                {user?.username}
+              </h2>
+              <p className="text-sm text-gray-400">{user?.phone}</p>
+            </div>
+          </div>
           <div className="flex flex-col gap-3 text-md text-white">
             {menuItems.map((item, i) => (
               <Link
