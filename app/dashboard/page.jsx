@@ -280,18 +280,18 @@ export default function NFTInvestmentDashboard() {
 
         <Button
           onClick={openWhatsAppSupport}
-          className="fixed bottom-20 right-4 bg-green-600 hover:bg-green-700 text-white rounded-full w-14 h-14 shadow-lg z-30"
+          className="fixed bottom-40 right-4 bg-green-600 hover:bg-green-700 text-white rounded-full w-12 h-12 shadow-lg z-30"
           size="icon"
         >
-          <MessageCircle className="h-6 w-6" />
+          <MessageCircle className="h-3 w-3" />
         </Button>
 
         <Button
           onClick={() => setSupportModalOpen(true)}
-          className="fixed bottom-20 right-20 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-14 h-14 shadow-lg z-30"
+          className="fixed bottom-55 right-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-12 h-12 shadow-lg z-30"
           size="icon"
         >
-          <HelpCircle className="h-6 w-6" />
+          <HelpCircle className="h-3 w-3" />
         </Button>
 
         <InvestModal
