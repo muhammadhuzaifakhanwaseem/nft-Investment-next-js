@@ -8,7 +8,9 @@ import {
   Banknote,
   MessageCircle,
 } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
+import logo from '@/public/mepx.png'
 
 export default function page() {
   return (
@@ -29,13 +31,8 @@ export default function page() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6 mt-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#008080] rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">FB</span>
-            </div>
-            <div>
-              <h1 className="text-[#008080] font-bold text-xl">faysalbank</h1>
-              <p className="text-gray-200 text-sm">12.0.44</p>
-            </div>
+            <Image src={logo} alt="logo" width={60} height={60} />
+            <h1 className="text-2xl font-bold text-white">MEP-X</h1>
           </div>
           <Button
             variant="ghost"

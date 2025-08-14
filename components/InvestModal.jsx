@@ -9,6 +9,7 @@ import {
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { useUser } from '@/app/context/UserContext'
 
 const InvestModal = ({
     balance,
@@ -19,7 +20,14 @@ const InvestModal = ({
     selectedPlan
 }) => {
 
+    const { fetchUser } = useUser()
+
     const [token, setToken] = useState("");
+
+    useEffect(() => {
+        const authToken = Cookies.get("auth_token");
+        setToken(authToken || "");
+    }, []);
 
     useEffect(() => {
         const authToken = Cookies.get("auth_token");
@@ -40,6 +48,7 @@ const InvestModal = ({
 
             const data = await res.json();
             if (data.status) {
+                await fetchUser();
                 alert("✅ " + data.message);
                 setInvestModalOpen(false);
             } else {

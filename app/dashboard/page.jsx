@@ -15,6 +15,7 @@ import {
   Menu,
   X,
 } from "lucide-react"
+import logo from '@/public/mepx.png'
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -28,6 +29,7 @@ import axios from "axios"
 import WithdrawModal from './../../components/WithdrawModal';
 import Cookies from "js-cookie"
 import InvestModal from "@/components/InvestModal"
+import Image from "next/image"
 
 export default function NFTInvestmentDashboard() {
 
@@ -50,54 +52,23 @@ export default function NFTInvestmentDashboard() {
   const [isOpen, setIsOpen] = useState(false)
 
   const menuItems = [
-    { url: "/deposit/log", title: "My Deposits" },
-    { url: "withdraw/log", title: "My Withdawls" },
-    { url: "transactions/log", title: "My Transactions" },
-    { url: "investments/log", title: "My Investments" },
+    { url: "/dashboard/deposit/log", title: "My Deposits" },
+    { url: "/dashboard/withdraw/log", title: "My Withdawls" },
+    { url: "/dashboard/transactions/log", title: "My Transactions" },
+    { url: "/dashboard/investments/log", title: "My Investments" },
     { url: "", title: "My Daily Profits" },
     { url: "", title: "My Total Profits" },
     { url: "", title: "Refferal Commisions" },
     { url: "", title: "Transfer Amount" },
-    { url: "/team", title: "My Team" },
+    { url: "/dashboard/team", title: "My Team" },
+    { url: "/dashboard/user-rank", title: "User Rank" },
   ]
 
-  const [token, setToken] = useState("");
-
-  const { logout } = useUser()
-
-  const [loading, setLoading] = useState(true)
-
-  const [user, setUser] = useState(null)
-
-  const fetchUser = async () => {
-    try {
-      const res = await fetch("https://stocktitan.site/api/user", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      const data = await res.json()
-      if (res.ok) {
-        setUser(data.user)
-      } else {
-        setUser(null)
-      }
-    } catch (err) {
-      setUser(null)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const { logout, user, fetchUser, loading, token } = useUser()
 
   useEffect(() => {
-    const authToken = Cookies.get("auth_token");
-    setToken(authToken || "");
-  }, []);
-
-  useEffect(() => {
-    if (!token) return;
     fetchUser();
-  }, [token]);
+  }, []);
 
   if (loading) return <div className="flex items-center justify-center h-screen bg-gray-100">
     <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -116,8 +87,8 @@ export default function NFTInvestmentDashboard() {
           className={`fixed inset-y-0 my-auto h-[80%] ${isOpen ? 'left-[0]' : '-left-[100%]'} w-72 bg-gray-900 backdrop-blur-xl border-r border-green-500/40 rounded-r-3xl p-4 flex flex-col z-30 duration-300`}
         >
           <div className="flex border-b-1 pb-4 border-green-400 items-center gap-3 mb-4">
-            <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center">
-              <User className="w-8 h-8 text-gray-500" />
+            <div className="w-14 h-14 rounded-full flex items-center justify-center">
+              <Image src={logo} alt="logo" width={40} height={40} />
             </div>
             <div>
               <h2 className="text-base font-semibold text-white leading-5">
@@ -150,8 +121,7 @@ export default function NFTInvestmentDashboard() {
                 <div className="flex items-center gap-3">
 
                   <Avatar className="w-10 h-10">
-                    <AvatarImage src="/placeholder.svg" />
-                    <AvatarFallback className="bg-emerald-600 capitalize">{user?.username?.charAt(0)}</AvatarFallback>
+                    <Image src={logo} alt="logo" width={60} height={60} />
                   </Avatar>
                   <div>
                     <h1 className="text-white font-semibold">Hi, {user?.username}!</h1>
@@ -183,7 +153,7 @@ export default function NFTInvestmentDashboard() {
                     >
                       <Link
                         className="w-full flex items-center gap-1"
-                        href={'/deposit'}
+                        href={'/dashboard/deposit'}
                       >
                         <Plus className="h-4 w-4 mr-2" />
                         Deposit

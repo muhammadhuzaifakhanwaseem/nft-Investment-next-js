@@ -12,22 +12,32 @@ export default function WithdrawModal({ withdrawModalOpen, setWithdrawModalOpen,
   const [wallet, setWallet] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Load saved details from localStorage
   useEffect(() => {
     if (withdrawModalOpen) {
+      // Load methods
       fetch("https://stocktitan.site/api/withdrawal/methods")
         .then(res => res.json())
         .then(data => {
-          if (data.status === "success") {
-            setMethods(data.methods);
-          }
+          if (data.status === "success") setMethods(data.methods);
         })
         .catch(err => console.error(err));
+
+      // Load saved user data
+      const savedData = localStorage.getItem("withdraw_account");
+      if (savedData) {
+        const { methodId, wallet } = JSON.parse(savedData);
+        setMethodId(methodId);
+        setWallet(wallet);
+      }
     }
   }, [withdrawModalOpen]);
 
   const handleWithdraw = async () => {
     if (!methodId || !amount || !wallet) return alert("Fill all fields");
     setLoading(true);
+    localStorage.setItem("withdraw_account", JSON.stringify({ methodId, wallet }));
+    setIsBound(true);
     try {
       const res = await fetch("https://stocktitan.site/api/withdrawals", {
         method: "POST",
@@ -51,6 +61,15 @@ export default function WithdrawModal({ withdrawModalOpen, setWithdrawModalOpen,
     setLoading(false);
   };
 
+  const [isBinded, setIsBound] = useState(!!localStorage.getItem("withdraw_account"));
+
+  const handleUnbind = () => {
+    setIsBound(false);
+    setMethodId("");
+    setWallet("");
+    localStorage.removeItem("withdraw_account");
+  };
+
   return (
     <Dialog open={withdrawModalOpen} onOpenChange={setWithdrawModalOpen}>
       <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-green-400/35 text-white">
@@ -68,6 +87,7 @@ export default function WithdrawModal({ withdrawModalOpen, setWithdrawModalOpen,
               className="w-full bg-gray-800/50 border border-gray-700 text-white p-2 rounded"
               value={methodId}
               onChange={(e) => setMethodId(e.target.value)}
+              disabled={isBinded} // disable if saved
             >
               <option value="">Select method</option>
               {methods.map((m) => (
@@ -84,8 +104,7 @@ export default function WithdrawModal({ withdrawModalOpen, setWithdrawModalOpen,
               <p
                 dangerouslySetInnerHTML={{
                   __html:
-                    methods.find((m) => m.id === parseInt(methodId))?.withdraw_instruction ||
-                    ""
+                    methods.find((m) => m.id === parseInt(methodId))?.withdraw_instruction || ""
                 }}
               />
             </div>
@@ -110,6 +129,7 @@ export default function WithdrawModal({ withdrawModalOpen, setWithdrawModalOpen,
               placeholder="Enter wallet or account number"
               value={wallet}
               onChange={(e) => setWallet(e.target.value)}
+              disabled={isBinded} // disable if saved
               className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
             />
           </div>
@@ -131,6 +151,11 @@ export default function WithdrawModal({ withdrawModalOpen, setWithdrawModalOpen,
               {loading ? "Processing..." : "Withdraw"}
             </Button>
           </div>
+          {isBinded ?
+            <Button onClick={handleUnbind} className="bg-red-600 hover:bg-red-700 text-white">
+              Unbind Withdrawal Account
+            </Button> : ""
+          }
         </div>
       </DialogContent>
     </Dialog>

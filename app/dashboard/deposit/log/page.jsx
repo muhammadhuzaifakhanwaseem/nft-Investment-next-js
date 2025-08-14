@@ -135,7 +135,7 @@ export default function LogPage() {
                                                         <DialogTrigger asChild>
                                                             <Button
                                                                 variant="outline"
-                                                                className="text-white border-gray-600 hover:bg-gray-700/50"
+                                                                className=""
                                                                 onClick={() => setSelectedDeposit(deposit)}
                                                             >
                                                                 View

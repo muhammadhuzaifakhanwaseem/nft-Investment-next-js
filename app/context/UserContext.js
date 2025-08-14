@@ -10,10 +10,9 @@ export function UserProvider({ children }) {
   const router = useRouter()
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
-
+  const token = getCookie("auth_token")
   const fetchUser = async () => {
     try {
-      const token = getCookie("auth_token")
       if (!token) {
         setUser(null)
         return
@@ -48,7 +47,7 @@ export function UserProvider({ children }) {
   }
 
   return (
-    <UserContext.Provider value={{ user, setUser, logout, loading }}>
+    <UserContext.Provider value={{ user, setUser, logout, loading, fetchUser, token }}>
       {children}
     </UserContext.Provider>
   )
