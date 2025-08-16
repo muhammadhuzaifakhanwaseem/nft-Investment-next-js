@@ -37,7 +37,7 @@ export function UserProvider({ children }) {
 
   useEffect(() => {
     fetchUser()
-  }, [])
+  }, [token])
 
   const logout = async () => {
     deleteCookie("auth_token")
