@@ -34,7 +34,7 @@ export function UserProvider({ children }) {
   }
 
   useEffect(() => {
-    fetchUser()
+    fetchUser();
   }, [token])
 
   const logout = async () => {

@@ -30,6 +30,7 @@ import CustomerSupportModal from "@/components/customer-support-modal"
 import { useUser } from "../context/UserContext"
 
 import logo from '@/public/mepx.png'
+import { ShareWithFriends } from "@/components/share-with-friends"
 
 export default function NFTInvestmentDashboard() {
   const [investModalOpen, setInvestModalOpen] = useState(false)
@@ -244,6 +245,9 @@ export default function NFTInvestmentDashboard() {
                 </div>
               </div>
             </div>
+            {user ?
+              <ShareWithFriends user={user} /> : ""
+            }
           </div>
           <div className="fixed bottom-4 flex items-center justify-center w-full z-20">
             <Card className="bg-gray-900/90 backdrop-blur-xl border-green-800/50">

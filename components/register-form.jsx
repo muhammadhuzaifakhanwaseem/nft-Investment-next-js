@@ -66,13 +66,6 @@ export default function RegisterForm({ className, ...props }) {
         }
     }
 
-    useEffect(() => {
-        const authToken = Cookies.get("auth_token")
-        if (authToken.length > 1) {
-            redirect("/dashboard")
-        }
-    }, [])
-
     return (
         <div className={cn("min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4", className)} {...props}>
             <Card className="w-full max-w-sm bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
