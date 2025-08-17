@@ -56,8 +56,8 @@ export default function NFTInvestmentDashboard() {
     { url: "/dashboard/withdraw/log", title: "My Withdawls" },
     { url: "/dashboard/transactions/log", title: "My Transactions" },
     { url: "/dashboard/investments/log", title: "My Investments" },
-    { url: "", title: "My Daily Profits" },
-    { url: "", title: "My Total Profits" },
+    { url: "/dashboard/profit/daily", title: "My Daily Profits" },
+    { url: "/dashboard/profit/total", title: "My Total Profits" },
     { url: "", title: "Refferal Commisions" },
     { url: "", title: "Transfer Amount" },
     { url: "/dashboard/team", title: "My Team" },
@@ -65,11 +65,7 @@ export default function NFTInvestmentDashboard() {
     { url: "", title: "Customer Support", action: () => setSupportModalOpen(true) },
   ]
 
-  const { logout, user, fetchUser, loading, token } = useUser()
-
-  useEffect(() => {
-    fetchUser()
-  }, [])
+  const { logout, user, loading, token } = useUser();
 
   const openWhatsAppSupport = () => {
     const message = "Hi, I need help with my investment account"
@@ -134,7 +130,7 @@ export default function NFTInvestmentDashboard() {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
                   <Avatar className="w-10 h-10">
-                     <Image src={logo} alt="logo" width={40} height={40} />
+                    <Image src={logo} alt="logo" width={40} height={40} />
                   </Avatar>
                   <div>
                     <h1 className="text-white font-semibold">Hi, {user?.username}!</h1>

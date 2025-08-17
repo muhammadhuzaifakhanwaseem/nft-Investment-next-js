@@ -27,7 +27,7 @@ export default function InvestmentLogPage() {
                 throw new Error("Bearer token not configured")
             }
 
-            const response = await fetch("https://stocktitan.site/api/all/investments", {
+            const response = await fetch("https://stocktitan.site/api/profit/today", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -40,10 +40,8 @@ export default function InvestmentLogPage() {
 
             const data = await response.json()
 
-            if (data.status && data.data?.payments) {
-                setInvestments(data.data.payments)
-            } else {
-                throw new Error(data.message || "Failed to fetch investments")
+            if (data) {
+                setInvestments(data?.data || [])
             }
         } catch (err) {
             setError(err instanceof Error ? err.message : "An error occurred")
@@ -114,54 +112,8 @@ export default function InvestmentLogPage() {
             maximumFractionDigits: 2,
         })
     }
-    console.log(investments)
 
-    const data = {
-        "id": 2481,
-        "user_id": 2300,
-        "plan_id": 47,
-        "gateway_id": 0,
-        "transaction_id": "FETUCRXHTFGFQVOG",
-        "payment_gateway_trx": null,
-        "amount": "1.00000000",
-        "rate": "0.00000000",
-        "charge": "0.00000000",
-        "final_amount": "1000.00000000",
-        "btc_wallet": null,
-        "btc_amount": null,
-        "btc_trx": null,
-        "next_payment_date": "2025-08-19T20:52:25.000000Z",
-        "interest_amount": null,
-        "pay_count": null,
-        "payment_status": 1,
-        "payment_type": 1,
-        "payment_proof": null,
-        "is_mine": 0,
-        "created_at": "2025-08-14T20:52:25.000000Z",
-        "updated_at": "2025-08-14T20:52:25.000000Z",
-        "plan": {
-            "id": 47,
-            "plan_name": "5 DAYS AMAZON PLAN",
-            "amount_type": 0,
-            "minimum_amount": "1000.00000000",
-            "maximum_amount": "3000.00000000",
-            "amount": "0.00000000",
-            "return_interest": "20.00000000",
-            "interest_status": "percentage",
-            "return_for": 1,
-            "how_many_time": 1,
-            "every_time": 24,
-            "capital_back": 1,
-            "status": 1,
-            "invest_limit": 1000,
-            "created_at": "2025-02-05T00:11:37.000000Z",
-            "updated_at": "2025-06-16T04:18:11.000000Z",
-            "lock": 0,
-            "is_mine": 0,
-            "reinvest_percentage": 0,
-            "capital_back_percentage": 0
-        }
-    }
+    console.log(investments)
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4">
@@ -177,8 +129,8 @@ export default function InvestmentLogPage() {
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
                     <div className="flex-1">
-                        <h1 className="text-2xl font-bold text-white">Investments</h1>
-                        <p className="text-gray-400">View your investment activities</p>
+                        <h1 className="text-2xl font-bold text-white">Today Profit</h1>
+                        <p className="text-gray-400">View your today profit</p>
                     </div>
                     <Button
                         variant="outline"

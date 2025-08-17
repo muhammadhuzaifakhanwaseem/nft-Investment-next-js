@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, use, useContext, useEffect, useState } from "react"
 import { deleteCookie, getCookie } from "cookies-next"
 import { useRouter } from "next/navigation"
 
@@ -11,10 +11,10 @@ export function UserProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const token = getCookie("auth_token")
+
   const fetchUser = async () => {
     try {
       if (!token) {
-        setUser(null)
         return
       }
       const res = await fetch("https://stocktitan.site/api/user", {
@@ -26,10 +26,8 @@ export function UserProvider({ children }) {
       if (res.ok) {
         setUser(data.user)
       } else {
-        setUser(null)
       }
     } catch (err) {
-      setUser(null)
     } finally {
       setLoading(false)
     }
@@ -47,7 +45,7 @@ export function UserProvider({ children }) {
   }
 
   return (
-    <UserContext.Provider value={{ user, setUser, logout, loading, fetchUser, token }}>
+    <UserContext.Provider value={{ user, setUser, logout, loading, fetchUser, setLoading, token }}>
       {children}
     </UserContext.Provider>
   )
