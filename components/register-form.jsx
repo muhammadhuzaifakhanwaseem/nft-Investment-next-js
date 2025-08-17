@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { redirect } from "next/navigation"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
+import Cookies from "js-cookie"
 
 export default function RegisterForm({ className, ...props }) {
 
@@ -64,6 +65,13 @@ export default function RegisterForm({ className, ...props }) {
             setLoading(false)
         }
     }
+
+    useEffect(() => {
+        const authToken = Cookies.get("auth_token")
+        if (authToken.length > 1) {
+            redirect("/dashboard")
+        }
+    }, [])
 
     return (
         <div className={cn("min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4", className)} {...props}>
