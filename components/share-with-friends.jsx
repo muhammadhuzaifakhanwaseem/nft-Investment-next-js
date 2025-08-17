@@ -39,8 +39,8 @@ export function ShareWithFriends({ user }) {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Join Investment Rank Dashboard",
-          text: "Check out this awesome investment tracking app!",
+          title: "Join MEP-X",
+          text: "Check out MEP-X investment app!",
           url: referralLink,
         })
       } catch (err) {
