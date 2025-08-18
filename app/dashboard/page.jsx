@@ -60,7 +60,7 @@ export default function NFTInvestmentDashboard() {
     { url: "/dashboard/profit/daily", title: "My Daily Profits" },
     { url: "/dashboard/profit/total", title: "My Total Profits" },
     { url: "", title: "Refferal Commisions" },
-    { url: "", title: "Transfer Amount" },
+    { url: "/dashboard/transfer", title: "Transfer Amount" },
     { url: "/dashboard/team", title: "My Team" },
     { url: "/dashboard/user-rank", title: "User Rank" },
     { url: "", title: "Customer Support", action: () => setSupportModalOpen(true) },
@@ -213,9 +213,7 @@ export default function NFTInvestmentDashboard() {
                               onClick={() => {
                                 setSelectedPlan(plan)
                                 setInvestModalOpen(
-                                  Number(user?.balance ?? 0).toFixed(0) < Number(plan.minimum_amount ?? 0).toFixed(0)
-                                    ? false
-                                    : true,
+                                  true
                                 )
                               }}
                               size="sm"
