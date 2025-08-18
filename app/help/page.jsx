@@ -11,7 +11,7 @@ export default function HelpPage() {
             <div className="max-w-2xl mx-auto pt-4">
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-8">
-                    <Link href="/">
+                    <Link href="/dashboard">
                         <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
                             <ArrowLeft className="h-4 w-4 mr-2" />
                             Back
