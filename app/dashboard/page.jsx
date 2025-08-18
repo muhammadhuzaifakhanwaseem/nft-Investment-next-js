@@ -61,6 +61,7 @@ export default function NFTInvestmentDashboard() {
     { url: "/dashboard/profit/total", title: "My Total Profits" },
     { url: "", title: "Refferal Commisions" },
     { url: "/dashboard/transfer", title: "Transfer Amount" },
+    { url: "/dashboard/transfer/log", title: "All Transfers" },
     { url: "/dashboard/team", title: "My Team" },
     { url: "/dashboard/user-rank", title: "User Rank" },
     { url: "", title: "Customer Support", action: () => setSupportModalOpen(true) },
@@ -86,7 +87,7 @@ export default function NFTInvestmentDashboard() {
       <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-gray-800 to-green-900 flex">
         {isOpen && <div className="fixed inset-0 bg-white/30 backdrop-blur-xs z-30" onClick={() => setIsOpen(false)} />}
         <div
-          className={`fixed inset-y-0 my-auto h-[80%] ${isOpen ? "left-[0]" : "-left-[100%]"} w-72 bg-gray-900 backdrop-blur-xl border-r border-green-500/40 rounded-r-3xl p-4 flex flex-col z-30 duration-300`}
+          className={`fixed inset-y-0 my-auto h-[90%] ${isOpen ? "left-[0]" : "-left-[100%]"} w-72 bg-gray-900 backdrop-blur-xl border-r border-green-500/40 rounded-r-3xl p-4 flex flex-col z-30 duration-300`}
         >
           <div className="flex border-b-1 pb-4 border-green-400 items-center gap-3 mb-4">
             <Image src={logo} alt="logo" width={40} height={40} />
