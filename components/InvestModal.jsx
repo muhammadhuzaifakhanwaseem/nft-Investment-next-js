@@ -10,6 +10,7 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { useUser } from '@/app/context/UserContext'
+import SuccessAlert from './success-alert';
 
 const InvestModal = ({
     balance,
@@ -34,6 +35,9 @@ const InvestModal = ({
         setToken(authToken || "");
     }, []);
 
+    const [open, setOpen] = useState(false)
+    const [message, setMessage] = useState({})
+
     const handleInvest = async () => {
         try {
             const formData = new FormData();
@@ -49,7 +53,11 @@ const InvestModal = ({
             const data = await res.json();
             if (data.status) {
                 await fetchUser();
-                alert("✅ " + data.message);
+                setOpen(true)
+                setMessage({ title: "Success", desc: data?.message, type: "success" })
+                setTimeout(() => {
+                    setOpen(false)
+                }, 3000);
                 setInvestModalOpen(false);
             } else {
                 alert("❌ " + data.message);
@@ -61,85 +69,88 @@ const InvestModal = ({
     };
 
     return (
-        <Dialog open={investModalOpen} onOpenChange={setInvestModalOpen}>
-            <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-green-400/35 text-white">
-                <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                        <TrendingUp className="h-5 w-5 text-emerald-400" />
-                        {selectedPlan?.plan_name}
-                    </DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                    {selectedPlan && (
-                        <div className="bg-gray-800/30 rounded-lg p-4 space-y-2 text-sm">
-                            <div className="flex justify-between">
-                                <span className="text-gray-400">Your Balance:</span>
-                                <span className="text-green-400">PKR {balance}</span>
-                            </div>
-                            {investAmount ?
+        <>
+            <SuccessAlert open={open} message={message} />
+            <Dialog open={investModalOpen} onOpenChange={setInvestModalOpen}>
+                <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-green-400/35 text-white">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            <TrendingUp className="h-5 w-5 text-emerald-400" />
+                            {selectedPlan?.plan_name}
+                        </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        {selectedPlan && (
+                            <div className="bg-gray-800/30 rounded-lg p-4 space-y-2 text-sm">
                                 <div className="flex justify-between">
-                                    <span className="text-gray-400">Daily Profit:</span>
-                                    <span className="text-green-400">{investAmount * Number(selectedPlan?.return_interest ?? 0).toFixed(0) / 100}</span>
+                                    <span className="text-gray-400">Your Balance:</span>
+                                    <span className="text-green-400">PKR {balance}</span>
                                 </div>
-                                : ""}
-                            {investAmount ?
+                                {investAmount ?
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-400">Daily Profit:</span>
+                                        <span className="text-green-400">{investAmount * Number(selectedPlan?.return_interest ?? 0).toFixed(0) / 100}</span>
+                                    </div>
+                                    : ""}
+                                {investAmount ?
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-400">Total Profit:</span>
+                                        <span className="text-green-400">{((investAmount * Number(selectedPlan?.return_interest ?? 0).toFixed(0) / 100) * selectedPlan?.every_time).toFixed(2)} </span>
+                                    </div>
+                                    : ""}
                                 <div className="flex justify-between">
-                                    <span className="text-gray-400">Total Profit:</span>
-                                    <span className="text-green-400">{((investAmount * Number(selectedPlan?.return_interest ?? 0).toFixed(0) / 100) * selectedPlan?.every_time).toFixed(2)} </span>
+                                    <span className="text-gray-400">Duration:</span>
+                                    <span className="text-white">{selectedPlan.time?.name}</span>
                                 </div>
-                                : ""}
-                            <div className="flex justify-between">
-                                <span className="text-gray-400">Duration:</span>
-                                <span className="text-white">{selectedPlan.time?.name}</span>
+                                <div className="flex justify-between">
+                                    <span className="text-gray-400">Min:</span>
+                                    <span className="text-white">
+                                        PKR {Number(selectedPlan.minimum_amount ?? 0).toFixed(0)}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-gray-400">Max:</span>
+                                    <span className="text-white">
+                                        PKR {Number(selectedPlan.maximum_amount ?? 0).toFixed(0)}
+                                    </span>
+                                </div>
                             </div>
-                            <div className="flex justify-between">
-                                <span className="text-gray-400">Min:</span>
-                                <span className="text-white">
-                                    PKR {Number(selectedPlan.minimum_amount ?? 0).toFixed(0)}
-                                </span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-gray-400">Max:</span>
-                                <span className="text-white">
-                                    PKR {Number(selectedPlan.maximum_amount ?? 0).toFixed(0)}
-                                </span>
-                            </div>
+                        )}
+
+                        <div>
+                            <Label className="text-gray-300 mb-3 text-sm">Investment Amount (PKR)</Label>
+                            <Input
+                                type="number"
+                                placeholder="0.00"
+                                onChange={(e) => setInvestAmount(Number(e.target.value))}
+                                value={investAmount || 0}
+                                className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
+                            />
                         </div>
-                    )}
 
-                    <div>
-                        <Label className="text-gray-300 mb-3 text-sm">Investment Amount (PKR)</Label>
-                        <Input
-                            type="number"
-                            placeholder="0.00"
-                            onChange={(e) => setInvestAmount(Number(e.target.value))}
-                            value={investAmount || 0}
-                            className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
-                        />
+                        <div className="flex gap-3">
+                            <Button
+                                onClick={() => setInvestModalOpen(false)}
+                                className="flex-1 bg-gray-600 hover:bg-gray-700"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                disabled={
+                                    investAmount < Number(selectedPlan?.minimum_amount ?? 0) ||
+                                    investAmount > Number(selectedPlan?.maximum_amount ?? 0)
+                                }
+                                onClick={handleInvest}
+                                className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-green-700"
+                            >
+                                Invest Now
+                            </Button>
+
+                        </div>
                     </div>
-
-                    <div className="flex gap-3">
-                        <Button
-                            onClick={() => setInvestModalOpen(false)}
-                            className="flex-1 bg-gray-600 hover:bg-gray-700"
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            disabled={
-                                investAmount < Number(selectedPlan?.minimum_amount ?? 0) ||
-                                investAmount > Number(selectedPlan?.maximum_amount ?? 0)
-                            }
-                            onClick={handleInvest}
-                            className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-green-700"
-                        >
-                            Invest Now
-                        </Button>
-
-                    </div>
-                </div>
-            </DialogContent>
-        </Dialog>
+                </DialogContent>
+            </Dialog>
+        </>
     )
 }
 

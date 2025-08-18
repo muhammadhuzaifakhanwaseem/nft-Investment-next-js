@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import Cookies from "js-cookie"
 import { redirect } from "next/navigation"
+import SuccessAlert from '@/components/success-alert';
 
 export default function DepositPage() {
   const [currentStep, setCurrentStep] = useState(1)
@@ -52,6 +53,9 @@ export default function DepositPage() {
     setToken(authToken || "");
   }, []);
 
+  const [open, setOpen] = useState(false)
+  const [message, setMessage] = useState({})
+
   const handleSubmit = async () => {
     if (!amount || !uploadedFile) {
       alert("Please enter amount and upload receipt");
@@ -73,11 +77,15 @@ export default function DepositPage() {
       const data = await res.json();
 
       if (res.ok) {
-        alert(data.message || "Deposit request submitted successfully!");
-        setCurrentStep(1);
-        setAmount("");
-        setUploadedFile(null);
-        redirect("/dashboard/deposit/log");
+        setOpen(true)
+        setMessage({ title: "Success", desc: data.message || "Deposit request submitted successfully!", type: "success" })
+        setTimeout(() => {
+          setOpen(false)
+          redirect("/dashboard/deposit/log");
+          setCurrentStep(1);
+          setAmount("");
+          setUploadedFile(null);
+        }, 3000);
       } else {
         alert(data.message || "Something went wrong");
       }
@@ -353,7 +361,7 @@ export default function DepositPage() {
             )}
           </CardContent>
         </Card>
-
+        <SuccessAlert open={open} message={message} />
         {/* Help Text */}
         <div className="mt-4 text-center">
           <p className="text-gray-400 text-sm">Need help? Contact support for assistance</p>
