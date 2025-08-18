@@ -101,6 +101,7 @@ export default function TeamPage() {
             },
             summary: json.data.summary,
           })
+          console.log(json.data)
         } else {
           throw new Error(json.message || "Failed to fetch team data")
         }
@@ -114,6 +115,7 @@ export default function TeamPage() {
 
     fetchTeamData()
   }, [])
+
 
   const getLevelIcon = (level) => {
     switch (level) {
@@ -144,7 +146,7 @@ export default function TeamPage() {
   const formatCurrency = (amount) =>
     new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "PKR",
       minimumFractionDigits: 2,
     }).format(amount)
 
@@ -383,11 +385,10 @@ export default function TeamPage() {
                                   <p className="text-white font-medium">{member.name}</p>
                                   <div className="flex items-center gap-2">
                                     <Badge
-                                      className={`text-xs ${
-                                        member.status === "active"
+                                      className={`text-xs ${member.status === "active"
                                           ? "bg-green-500/20 text-green-400"
                                           : "bg-red-500/20 text-red-400"
-                                      }`}
+                                        }`}
                                     >
                                       {member.status}
                                     </Badge>
@@ -442,7 +443,7 @@ export default function TeamPage() {
               </div>
               <div className="text-center p-4 bg-blue-500/10 rounded-lg">
                 <div className="text-2xl font-bold text-blue-400 mb-1">
-                  ${safeAverage(totalStats.totalInvestment, totalStats.totalUsers).toLocaleString()}
+                  PKR {safeAverage(totalStats.totalInvestment, totalStats.totalUsers).toLocaleString()}
                 </div>
                 <p className="text-gray-400 text-sm">Avg Investment per User</p>
               </div>

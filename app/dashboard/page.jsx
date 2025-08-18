@@ -211,9 +211,7 @@ export default function NFTInvestmentDashboard() {
                             </span>
                             <Button
                               onClick={() => {
-                                Number(user?.balance ?? 0).toFixed(0) < Number(plan.minimum_amount ?? 0).toFixed(0)
-                                  ? alert("Insufficient Balance")
-                                  : setSelectedPlan(plan)
+                                setSelectedPlan(plan)
                                 setInvestModalOpen(
                                   Number(user?.balance ?? 0).toFixed(0) < Number(plan.minimum_amount ?? 0).toFixed(0)
                                     ? false
