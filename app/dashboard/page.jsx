@@ -59,7 +59,7 @@ export default function NFTInvestmentDashboard() {
     { url: "/dashboard/investments/log", title: "My Investments" },
     { url: "/dashboard/profit/daily", title: "My Daily Profits" },
     { url: "/dashboard/profit/total", title: "My Total Profits" },
-    { url: "", title: "Refferal Commisions" },
+    { url: "/dashboard/referral_commissions", title: "Referral Commissions" },
     { url: "/dashboard/transfer", title: "Transfer Amount" },
     { url: "/dashboard/transfer/log", title: "All Transfers" },
     { url: "/dashboard/team", title: "My Team" },

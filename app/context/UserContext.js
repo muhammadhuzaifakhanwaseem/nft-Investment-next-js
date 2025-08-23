@@ -1,4 +1,5 @@
 "use client"
+import { redirect } from "next/navigation"
 import { createContext, useContext, useEffect, useState } from "react"
 
 const UserContext = createContext(null)
@@ -17,12 +18,12 @@ export function UserProvider({ children }) {
           setUser(data.user)
           setToken(data.user?.login_token)
         } else {
-          setUser(null)
-          setToken(null)
+          logout()
+          redirect('/')
         }
       } catch {
-        setUser(null)
-        setToken(null)
+        logout()
+        redirect('/')
       } finally {
         setLoading(false)
       }
@@ -34,6 +35,7 @@ export function UserProvider({ children }) {
     await fetch("/api/logout", { method: "POST" })
     setUser(null)
     setToken(null)
+    redirect('/')
   }
 
   return (
