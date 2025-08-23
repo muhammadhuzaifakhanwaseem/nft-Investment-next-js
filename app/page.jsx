@@ -28,7 +28,7 @@ export default function page() {
   }, [router])
 
   return (
-    <div className="h-[92vh] bg-gradient-to-br from-[gray-500] to-[gray-800] relative overflow-hidden flex flex-col">
+    <div className="h-[100vh] bg-gradient-to-br from-[gray-500] to-[gray-800] relative overflow-auto flex flex-col">
       {/* Background Video */}
       <video
         src="/bg-video.mp4"

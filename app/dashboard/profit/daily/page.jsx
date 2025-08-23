@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useUser } from "@/app/context/UserContext"
+import DashboardLayout from "@/components/DashboardLayout"
 
 export default function InvestmentLogPage() {
     const [investments, setInvestments] = useState([])
@@ -108,111 +109,113 @@ export default function InvestmentLogPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4">
-            <div className="max-w-6xl mx-auto">
-                {/* Header */}
-                <div className="flex items-center gap-4 mb-6">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-white hover:bg-gray-800/50"
-                        onClick={() => window.history.back()}
-                    >
-                        <ArrowLeft className="h-5 w-5" />
-                    </Button>
-                    <div className="flex-1">
-                        <h1 className="text-2xl font-bold text-white">Today Profit</h1>
-                        <p className="text-gray-400">View your today profit</p>
+        <DashboardLayout>
+            <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4 pb-30">
+                <div className="max-w-6xl mx-auto">
+                    {/* Header */}
+                    <div className="flex items-center gap-4 mb-6">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-white hover:bg-gray-800/50"
+                            onClick={() => window.history.back()}
+                        >
+                            <ArrowLeft className="h-5 w-5" />
+                        </Button>
+                        <div className="flex-1">
+                            <h1 className="text-2xl font-bold text-white">Today Profit</h1>
+                            <p className="text-gray-400">View your today profit</p>
+                        </div>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={fetchInvestments}
+                            disabled={loading}
+                            className="bg-gray-800/50 border-gray-700 text-white hover:bg-gray-700/50"
+                        >
+                            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} />
+                            Refresh
+                        </Button>
                     </div>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={fetchInvestments}
-                        disabled={loading}
-                        className="bg-gray-800/50 border-gray-700 text-white hover:bg-gray-700/50"
-                    >
-                        <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} />
-                        Refresh
-                    </Button>
-                </div>
 
-                {/* Investment Table Card */}
-                <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
-                    <CardHeader>
-                        <CardTitle className="text-white flex items-center justify-between">
-                            All Investments
-                            {!loading && (
-                                <span className="text-sm font-normal text-gray-400">{investments.length} total investments</span>
-                            )}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        {loading ? (
-                            <div className="flex items-center justify-center py-8">
-                                <RefreshCw className="h-6 w-6 animate-spin text-gray-400 mr-2" />
-                                <span className="text-gray-400">Loading investments...</span>
-                            </div>
-                        ) : error ? (
-                            <div className="text-center py-8">
-                                <p className="text-red-400 mb-4">{error}</p>
-                                <Button
-                                    variant="outline"
-                                    onClick={fetchInvestments}
-                                    className="bg-gray-800/50 border-gray-700 text-white hover:bg-gray-700/50"
-                                >
-                                    Try Again
-                                </Button>
-                            </div>
-                        ) : (
-                            <div className="overflow-x-auto">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow className="bg-gray-800/50 hover:bg-gray-800/50 border-gray-700">
-                                            <TableHead className="text-gray-300 whitespace-nowrap">Transaction ID</TableHead>
-                                            <TableHead className="text-gray-300 whitespace-nowrap">Plan</TableHead>
-                                            <TableHead className="text-gray-300 whitespace-nowrap">Final Amount</TableHead>
-                                            <TableHead className="text-gray-300 whitespace-nowrap">Type</TableHead>
-                                            <TableHead className="text-gray-300 whitespace-nowrap">Status</TableHead>
-                                            <TableHead className="text-gray-300 whitespace-nowrap">Next Payment</TableHead>
-                                            <TableHead className="text-gray-300 whitespace-nowrap">Created</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {investments.map((investment) => (
-                                            <TableRow key={investment?.data?.id} className="border-gray-700 hover:bg-gray-800/30">
-                                                <TableCell className="font-medium text-white whitespace-nowrap font-mono text-sm">
-                                                    {investment?.data?.transaction_id}
-                                                </TableCell>
-                                                <TableCell className="text-white whitespace-nowrap">{investment?.data.plan?.plan_name}</TableCell>
-                                                <TableCell className="text-white whitespace-nowrap">
-                                                    PKR {formatAmount(investment?.data?.final_amount)}
-                                                </TableCell>
-                                                <TableCell className="text-blue-400 whitespace-nowrap">
-                                                    {getPaymentTypeText(investment?.data.payment_type)}
-                                                </TableCell>
-                                                <TableCell
-                                                    className={`font-medium ${getStatusColor(investment?.data.payment_status)} whitespace-nowrap`}
-                                                >
-                                                    {getStatusText(investment?.data.payment_status)}
-                                                </TableCell>
-                                                <TableCell className="text-gray-400 whitespace-nowrap text-sm">
-                                                    {formatDate(investment?.data.next_payment_date)}
-                                                </TableCell>
-                                                <TableCell className="text-gray-400 whitespace-nowrap text-sm">
-                                                    {formatDate(investment?.data.created_at)}
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                                {investments.length === 0 && (
-                                    <div className="text-center text-gray-400 py-8">No investments found.</div>
+                    {/* Investment Table Card */}
+                    <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
+                        <CardHeader>
+                            <CardTitle className="text-white flex items-center justify-between">
+                                All Investments
+                                {!loading && (
+                                    <span className="text-sm font-normal text-gray-400">{investments.length} total investments</span>
                                 )}
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {loading ? (
+                                <div className="flex items-center justify-center py-8">
+                                    <RefreshCw className="h-6 w-6 animate-spin text-gray-400 mr-2" />
+                                    <span className="text-gray-400">Loading investments...</span>
+                                </div>
+                            ) : error ? (
+                                <div className="text-center py-8">
+                                    <p className="text-red-400 mb-4">{error}</p>
+                                    <Button
+                                        variant="outline"
+                                        onClick={fetchInvestments}
+                                        className="bg-gray-800/50 border-gray-700 text-white hover:bg-gray-700/50"
+                                    >
+                                        Try Again
+                                    </Button>
+                                </div>
+                            ) : (
+                                <div className="overflow-x-auto">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow className="bg-gray-800/50 hover:bg-gray-800/50 border-gray-700">
+                                                <TableHead className="text-gray-300 whitespace-nowrap">Transaction ID</TableHead>
+                                                <TableHead className="text-gray-300 whitespace-nowrap">Plan</TableHead>
+                                                <TableHead className="text-gray-300 whitespace-nowrap">Final Amount</TableHead>
+                                                <TableHead className="text-gray-300 whitespace-nowrap">Type</TableHead>
+                                                <TableHead className="text-gray-300 whitespace-nowrap">Status</TableHead>
+                                                <TableHead className="text-gray-300 whitespace-nowrap">Next Payment</TableHead>
+                                                <TableHead className="text-gray-300 whitespace-nowrap">Created</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {investments.map((investment) => (
+                                                <TableRow key={investment?.data?.id} className="border-gray-700 hover:bg-gray-800/30">
+                                                    <TableCell className="font-medium text-white whitespace-nowrap font-mono text-sm">
+                                                        {investment?.data?.transaction_id}
+                                                    </TableCell>
+                                                    <TableCell className="text-white whitespace-nowrap">{investment?.data.plan?.plan_name}</TableCell>
+                                                    <TableCell className="text-white whitespace-nowrap">
+                                                        PKR {formatAmount(investment?.data?.final_amount)}
+                                                    </TableCell>
+                                                    <TableCell className="text-blue-400 whitespace-nowrap">
+                                                        {getPaymentTypeText(investment?.data.payment_type)}
+                                                    </TableCell>
+                                                    <TableCell
+                                                        className={`font-medium ${getStatusColor(investment?.data.payment_status)} whitespace-nowrap`}
+                                                    >
+                                                        {getStatusText(investment?.data.payment_status)}
+                                                    </TableCell>
+                                                    <TableCell className="text-gray-400 whitespace-nowrap text-sm">
+                                                        {formatDate(investment?.data.next_payment_date)}
+                                                    </TableCell>
+                                                    <TableCell className="text-gray-400 whitespace-nowrap text-sm">
+                                                        {formatDate(investment?.data.created_at)}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                    {investments.length === 0 && (
+                                        <div className="text-center text-gray-400 py-8">No investments found.</div>
+                                    )}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
-        </div>
+        </DashboardLayout>
     )
 }

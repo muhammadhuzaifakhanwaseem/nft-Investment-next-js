@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useUser } from "@/app/context/UserContext"
+import DashboardLayout from "@/components/DashboardLayout"
 
 export default function TransactionLogPage() {
     const [transactionData, setTransactionData] = useState(null)
@@ -147,159 +148,161 @@ export default function TransactionLogPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4">
-            <div className="max-w-6xl mx-auto">
-                {/* Header */}
-                <div className="flex items-center gap-4 mb-6">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-white hover:bg-gray-800/50"
-                        onClick={() => window.history.back()}
-                    >
-                        <ArrowLeft className="h-5 w-5" />
-                    </Button>
-                    <div className="flex-1">
-                        <h1 className="text-2xl font-bold text-white">Transaction Log</h1>
-                        <p className="text-gray-400">View your recent activities</p>
+        <DashboardLayout>
+            <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4 pb-30">
+                <div className="max-w-6xl mx-auto">
+                    {/* Header */}
+                    <div className="flex items-center gap-4 mb-6">
                         <Button
-                            onClick={fetchTransactions}
-                            variant="outline"
-                            size="sm"
-                            className="border-gray-600 mt-3 text-white hover:bg-gray-800/50 bg-transparent"
+                            variant="ghost"
+                            size="icon"
+                            className="text-white hover:bg-gray-800/50"
+                            onClick={() => window.history.back()}
                         >
-                            <RefreshCw className="h-4 w-4 mr-2" />
-                            Refresh
+                            <ArrowLeft className="h-5 w-5" />
                         </Button>
+                        <div className="flex-1">
+                            <h1 className="text-2xl font-bold text-white">Transaction Log</h1>
+                            <p className="text-gray-400">View your recent activities</p>
+                            <Button
+                                onClick={fetchTransactions}
+                                variant="outline"
+                                size="sm"
+                                className="border-gray-600 mt-3 text-white hover:bg-gray-800/50 bg-transparent"
+                            >
+                                <RefreshCw className="h-4 w-4 mr-2" />
+                                Refresh
+                            </Button>
+                        </div>
                     </div>
+
+                    {/* Transaction Tabs */}
+                    <Tabs defaultValue="deposits" className="w-full">
+                        <TabsList className="grid w-full grid-cols-2 bg-gray-800/50 border-gray-700">
+                            <TabsTrigger value="deposits" className="text-white data-[state=active]:bg-green-600">
+                                Deposits ({transactionData?.deposits.total || 0})
+                            </TabsTrigger>
+                            <TabsTrigger value="withdrawals" className="text-white data-[state=active]:bg-green-600">
+                                Withdrawals ({transactionData?.withdrawals.total || 0})
+                            </TabsTrigger>
+                        </TabsList>
+
+                        {/* Deposits Tab */}
+                        <TabsContent value="deposits">
+                            <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
+                                <CardHeader>
+                                    <CardTitle className="text-white">Deposit Transactions</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="overflow-x-auto">
+                                        <Table>
+                                            <TableHeader>
+                                                <TableRow className="bg-gray-800/50 hover:bg-gray-800/50 border-gray-700">
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Transaction ID</TableHead>
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Amount</TableHead>
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Rate</TableHead>
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Charge</TableHead>
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Final Amount</TableHead>
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Status</TableHead>
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Date</TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {transactionData?.deposits.data.map((deposit) => (
+                                                    <TableRow key={deposit.id} className="border-gray-700 hover:bg-gray-800/30">
+                                                        <TableCell className="font-medium text-white whitespace-nowrap">
+                                                            {deposit.transaction_id}
+                                                        </TableCell>
+                                                        <TableCell className="text-white whitespace-nowrap">
+                                                            PKR {formatAmount(deposit.amount)}
+                                                        </TableCell>
+                                                        <TableCell className="text-white whitespace-nowrap">{formatAmount(deposit.rate)}</TableCell>
+                                                        <TableCell className="text-white whitespace-nowrap">
+                                                            PKR {formatAmount(deposit.charge)}
+                                                        </TableCell>
+                                                        <TableCell className="text-white whitespace-nowrap">
+                                                            PKR {formatAmount(deposit.final_amount)}
+                                                        </TableCell>
+                                                        <TableCell
+                                                            className={`font-medium ${getPaymentStatusColor(deposit.payment_status)} whitespace-nowrap`}
+                                                        >
+                                                            {getPaymentStatusText(deposit.payment_status)}
+                                                        </TableCell>
+                                                        <TableCell className="text-gray-400 whitespace-nowrap">
+                                                            {formatDate(deposit.created_at)}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </div>
+                                    {(!transactionData?.deposits.data || transactionData.deposits.data.length === 0) && (
+                                        <div className="text-center text-gray-400 py-8">No deposit transactions found.</div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        {/* Withdrawals Tab */}
+                        <TabsContent value="withdrawals">
+                            <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
+                                <CardHeader>
+                                    <CardTitle className="text-white">Withdrawal Transactions</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="overflow-x-auto">
+                                        <Table>
+                                            <TableHeader>
+                                                <TableRow className="bg-gray-800/50 hover:bg-gray-800/50 border-gray-700">
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Transaction ID</TableHead>
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Amount</TableHead>
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Charge</TableHead>
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Method ID</TableHead>
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Status</TableHead>
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Date</TableHead>
+                                                    <TableHead className="text-gray-300 whitespace-nowrap">Reason</TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {transactionData?.withdrawals.data.map((withdrawal) => (
+                                                    <TableRow key={withdrawal.id} className="border-gray-700 hover:bg-gray-800/30">
+                                                        <TableCell className="font-medium text-white whitespace-nowrap">
+                                                            {withdrawal.transaction_id}
+                                                        </TableCell>
+                                                        <TableCell className="text-white whitespace-nowrap">
+                                                            PKR {formatAmount(withdrawal.withdraw_amount)}
+                                                        </TableCell>
+                                                        <TableCell className="text-white whitespace-nowrap">
+                                                            PKR {formatAmount(withdrawal.withdraw_charge)}
+                                                        </TableCell>
+                                                        <TableCell className="text-white whitespace-nowrap">
+                                                            {withdrawal?.withdraw_method?.name}
+                                                        </TableCell>
+                                                        <TableCell
+                                                            className={`font-medium ${getPaymentStatusColor(withdrawal.status)} whitespace-nowrap`}
+                                                        >
+                                                            {getPaymentStatusText(withdrawal.status)}
+                                                        </TableCell>
+                                                        <TableCell className="text-gray-400 whitespace-nowrap">
+                                                            {formatDate(withdrawal.created_at)}
+                                                        </TableCell>
+                                                        <TableCell className="text-gray-400 whitespace-nowrap">
+                                                            {withdrawal.reason_of_reject || "-"}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </div>
+                                    {(!transactionData?.withdrawals.data || transactionData.withdrawals.data.length === 0) && (
+                                        <div className="text-center text-gray-400 py-8">No withdrawal transactions found.</div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+                    </Tabs>
                 </div>
-
-                {/* Transaction Tabs */}
-                <Tabs defaultValue="deposits" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2 bg-gray-800/50 border-gray-700">
-                        <TabsTrigger value="deposits" className="text-white data-[state=active]:bg-green-600">
-                            Deposits ({transactionData?.deposits.total || 0})
-                        </TabsTrigger>
-                        <TabsTrigger value="withdrawals" className="text-white data-[state=active]:bg-green-600">
-                            Withdrawals ({transactionData?.withdrawals.total || 0})
-                        </TabsTrigger>
-                    </TabsList>
-
-                    {/* Deposits Tab */}
-                    <TabsContent value="deposits">
-                        <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
-                            <CardHeader>
-                                <CardTitle className="text-white">Deposit Transactions</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="overflow-x-auto">
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow className="bg-gray-800/50 hover:bg-gray-800/50 border-gray-700">
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Transaction ID</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Amount</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Rate</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Charge</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Final Amount</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Status</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Date</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {transactionData?.deposits.data.map((deposit) => (
-                                                <TableRow key={deposit.id} className="border-gray-700 hover:bg-gray-800/30">
-                                                    <TableCell className="font-medium text-white whitespace-nowrap">
-                                                        {deposit.transaction_id}
-                                                    </TableCell>
-                                                    <TableCell className="text-white whitespace-nowrap">
-                                                        PKR {formatAmount(deposit.amount)}
-                                                    </TableCell>
-                                                    <TableCell className="text-white whitespace-nowrap">{formatAmount(deposit.rate)}</TableCell>
-                                                    <TableCell className="text-white whitespace-nowrap">
-                                                        PKR {formatAmount(deposit.charge)}
-                                                    </TableCell>
-                                                    <TableCell className="text-white whitespace-nowrap">
-                                                        PKR {formatAmount(deposit.final_amount)}
-                                                    </TableCell>
-                                                    <TableCell
-                                                        className={`font-medium ${getPaymentStatusColor(deposit.payment_status)} whitespace-nowrap`}
-                                                    >
-                                                        {getPaymentStatusText(deposit.payment_status)}
-                                                    </TableCell>
-                                                    <TableCell className="text-gray-400 whitespace-nowrap">
-                                                        {formatDate(deposit.created_at)}
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </div>
-                                {(!transactionData?.deposits.data || transactionData.deposits.data.length === 0) && (
-                                    <div className="text-center text-gray-400 py-8">No deposit transactions found.</div>
-                                )}
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-
-                    {/* Withdrawals Tab */}
-                    <TabsContent value="withdrawals">
-                        <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
-                            <CardHeader>
-                                <CardTitle className="text-white">Withdrawal Transactions</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="overflow-x-auto">
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow className="bg-gray-800/50 hover:bg-gray-800/50 border-gray-700">
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Transaction ID</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Amount</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Charge</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Method ID</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Status</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Date</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Reason</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {transactionData?.withdrawals.data.map((withdrawal) => (
-                                                <TableRow key={withdrawal.id} className="border-gray-700 hover:bg-gray-800/30">
-                                                    <TableCell className="font-medium text-white whitespace-nowrap">
-                                                        {withdrawal.transaction_id}
-                                                    </TableCell>
-                                                    <TableCell className="text-white whitespace-nowrap">
-                                                        PKR {formatAmount(withdrawal.withdraw_amount)}
-                                                    </TableCell>
-                                                    <TableCell className="text-white whitespace-nowrap">
-                                                        PKR {formatAmount(withdrawal.withdraw_charge)}
-                                                    </TableCell>
-                                                    <TableCell className="text-white whitespace-nowrap">
-                                                        {withdrawal?.withdraw_method?.name}
-                                                    </TableCell>
-                                                    <TableCell
-                                                        className={`font-medium ${getPaymentStatusColor(withdrawal.status)} whitespace-nowrap`}
-                                                    >
-                                                        {getPaymentStatusText(withdrawal.status)}
-                                                    </TableCell>
-                                                    <TableCell className="text-gray-400 whitespace-nowrap">
-                                                        {formatDate(withdrawal.created_at)}
-                                                    </TableCell>
-                                                    <TableCell className="text-gray-400 whitespace-nowrap">
-                                                        {withdrawal.reason_of_reject || "-"}
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </div>
-                                {(!transactionData?.withdrawals.data || transactionData.withdrawals.data.length === 0) && (
-                                    <div className="text-center text-gray-400 py-8">No withdrawal transactions found.</div>
-                                )}
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-                </Tabs>
             </div>
-        </div>
+        </DashboardLayout>
     )
 }

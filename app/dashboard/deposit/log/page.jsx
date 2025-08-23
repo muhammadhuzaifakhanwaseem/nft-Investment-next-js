@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useUser } from "@/app/context/UserContext"
+import DashboardLayout from "@/components/DashboardLayout"
 
 export default function LogPage() {
     const [deposits, setDeposits] = useState([])
@@ -74,112 +75,114 @@ export default function LogPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4">
-            <div className="max-w-6xl mx-auto">
-                {/* Header */}
-                <div className="flex items-center gap-4 mb-6">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-white hover:bg-gray-800/50"
-                        onClick={() => window.history.back()}
-                    >
-                        <ArrowLeft className="h-5 w-5" />
-                    </Button>
-                    <div>
-                        <h1 className="text-2xl font-bold text-white">Deposit Records</h1>
-                        <p className="text-gray-400">View your recent activities</p>
-                    </div>
-                </div>
-
-                {/* Log Table */}
-                <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
-                    <CardHeader>
-                        <CardTitle className="text-white">All Deposits</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="overflow-x-auto">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow className="bg-gray-800/50 hover:bg-gray-800/50 border-gray-700">
-                                        <TableHead className="text-gray-300">Transaction ID</TableHead>
-                                        <TableHead className="text-gray-300">Amount</TableHead>
-                                        <TableHead className="text-gray-300">Charge</TableHead>
-                                        <TableHead className="text-gray-300">Status</TableHead>
-                                        <TableHead className="text-gray-300">Created At</TableHead>
-                                        <TableHead className="text-gray-300">Details</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {deposits.map((deposit) => {
-                                        const status = statusMap[deposit.payment_status] || "Processing"
-                                        const color = getStatusColor(status.toLowerCase())
-
-                                        return (
-                                            <TableRow key={deposit.id} className="border-gray-700 hover:bg-gray-800/30">
-                                                <TableCell className="text-white whitespace-nowrap">{deposit.transaction_id}</TableCell>
-                                                <TableCell className="text-white whitespace-nowrap">{parseFloat(deposit.amount).toFixed(2)}</TableCell>
-                                                <TableCell className="text-white whitespace-nowrap">{parseFloat(deposit.charge).toFixed(2)}</TableCell>
-                                                <TableCell className={`${color} font-medium whitespace-nowrap`}>
-                                                    {status}
-                                                </TableCell>
-                                                <TableCell className="text-gray-400 whitespace-nowrap">
-                                                    {new Date(deposit.created_at).toLocaleString()}
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Dialog>
-                                                        <DialogTrigger asChild>
-                                                            <Button
-                                                                variant="outline"
-                                                                className=""
-                                                                onClick={() => setSelectedDeposit(deposit)}
-                                                            >
-                                                                View
-                                                            </Button>
-                                                        </DialogTrigger>
-                                                        <DialogContent className="bg-gray-900 border border-gray-700 text-white max-w-2xl">
-                                                            <DialogHeader>
-                                                                <DialogTitle>Deposit Details</DialogTitle>
-                                                                <DialogDescription className="text-gray-400">
-                                                                    Transaction ID: {selectedDeposit?.transaction_id}
-                                                                </DialogDescription>
-                                                            </DialogHeader>
-                                                            <div className="grid grid-cols-2 gap-4 text-sm">
-                                                                <div><strong>TRX:</strong> {selectedDeposit?.id}</div>
-                                                                <div><strong>Gateway:</strong> {selectedDeposit?.method_name}</div>
-                                                                <div><strong>Final Amount:</strong> <br /> PKR {Number(selectedDeposit?.final_amount).toFixed(0)}</div>
-                                                                <div><strong>Status:</strong> {status}</div>
-                                                                <div><strong>Payment Date:</strong> {new Date(selectedDeposit?.created_at).toLocaleString()}</div>
-                                                                <div className="col-span-2">
-                                                                    <strong>Payment Proof:</strong>
-                                                                    {selectedDeposit?.payment_proof?.provide_screenshoot?.file ? (
-                                                                        <img
-                                                                            src={`https://stocktitan.site/core/storage/app/public/payment_proofs/${selectedDeposit.payment_proof.provide_screenshoot.file}`}
-                                                                            alt="Payment Proof"
-                                                                            className="object-contain max-h-[200px] w-auto border border-gray-700"
-                                                                        />
-                                                                    ) : (
-                                                                        <div className="text-gray-500 mt-2">No payment proof available.</div>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        </DialogContent>
-                                                    </Dialog>
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    })}
-                                </TableBody>
-                            </Table>
+        <DashboardLayout>
+            <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4 pb-30">
+                <div className="max-w-6xl mx-auto">
+                    {/* Header */}
+                    <div className="flex items-center gap-4 mb-6">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-white hover:bg-gray-800/50"
+                            onClick={() => window.history.back()}
+                        >
+                            <ArrowLeft className="h-5 w-5" />
+                        </Button>
+                        <div>
+                            <h1 className="text-2xl font-bold text-white">Deposit Records</h1>
+                            <p className="text-gray-400">View your recent activities</p>
                         </div>
-                        {loading ? (
-                            <div className="text-center text-gray-400 py-8">Loading...</div>
-                        ) : deposits.length === 0 ? (
-                            <div className="text-center text-gray-400 py-8">No deposit records found.</div>
-                        ) : null}
-                    </CardContent>
-                </Card>
+                    </div>
+
+                    {/* Log Table */}
+                    <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
+                        <CardHeader>
+                            <CardTitle className="text-white">All Deposits</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="overflow-x-auto">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow className="bg-gray-800/50 hover:bg-gray-800/50 border-gray-700">
+                                            <TableHead className="text-gray-300">Transaction ID</TableHead>
+                                            <TableHead className="text-gray-300">Amount</TableHead>
+                                            <TableHead className="text-gray-300">Charge</TableHead>
+                                            <TableHead className="text-gray-300">Status</TableHead>
+                                            <TableHead className="text-gray-300">Created At</TableHead>
+                                            <TableHead className="text-gray-300">Details</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {deposits.map((deposit) => {
+                                            const status = statusMap[deposit.payment_status] || "Processing"
+                                            const color = getStatusColor(status.toLowerCase())
+
+                                            return (
+                                                <TableRow key={deposit.id} className="border-gray-700 hover:bg-gray-800/30">
+                                                    <TableCell className="text-white whitespace-nowrap">{deposit.transaction_id}</TableCell>
+                                                    <TableCell className="text-white whitespace-nowrap">{parseFloat(deposit.amount).toFixed(2)}</TableCell>
+                                                    <TableCell className="text-white whitespace-nowrap">{parseFloat(deposit.charge).toFixed(2)}</TableCell>
+                                                    <TableCell className={`${color} font-medium whitespace-nowrap`}>
+                                                        {status}
+                                                    </TableCell>
+                                                    <TableCell className="text-gray-400 whitespace-nowrap">
+                                                        {new Date(deposit.created_at).toLocaleString()}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Dialog>
+                                                            <DialogTrigger asChild>
+                                                                <Button
+                                                                    variant="outline"
+                                                                    className=""
+                                                                    onClick={() => setSelectedDeposit(deposit)}
+                                                                >
+                                                                    View
+                                                                </Button>
+                                                            </DialogTrigger>
+                                                            <DialogContent className="bg-gray-900 border border-gray-700 text-white max-w-2xl">
+                                                                <DialogHeader>
+                                                                    <DialogTitle>Deposit Details</DialogTitle>
+                                                                    <DialogDescription className="text-gray-400">
+                                                                        Transaction ID: {selectedDeposit?.transaction_id}
+                                                                    </DialogDescription>
+                                                                </DialogHeader>
+                                                                <div className="grid grid-cols-2 gap-4 text-sm">
+                                                                    <div><strong>TRX:</strong> {selectedDeposit?.id}</div>
+                                                                    <div><strong>Gateway:</strong> {selectedDeposit?.method_name}</div>
+                                                                    <div><strong>Final Amount:</strong> <br /> PKR {Number(selectedDeposit?.final_amount).toFixed(0)}</div>
+                                                                    <div><strong>Status:</strong> {status}</div>
+                                                                    <div><strong>Payment Date:</strong> {new Date(selectedDeposit?.created_at).toLocaleString()}</div>
+                                                                    <div className="col-span-2">
+                                                                        <strong>Payment Proof:</strong>
+                                                                        {selectedDeposit?.payment_proof?.provide_screenshoot?.file ? (
+                                                                            <img
+                                                                                src={`https://stocktitan.site/core/storage/app/public/payment_proofs/${selectedDeposit.payment_proof.provide_screenshoot.file}`}
+                                                                                alt="Payment Proof"
+                                                                                className="object-contain max-h-[200px] w-auto border border-gray-700"
+                                                                            />
+                                                                        ) : (
+                                                                            <div className="text-gray-500 mt-2">No payment proof available.</div>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            </DialogContent>
+                                                        </Dialog>
+                                                    </TableCell>
+                                                </TableRow>
+                                            )
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                            {loading ? (
+                                <div className="text-center text-gray-400 py-8">Loading...</div>
+                            ) : deposits.length === 0 ? (
+                                <div className="text-center text-gray-400 py-8">No deposit records found.</div>
+                            ) : null}
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
-        </div>
+        </DashboardLayout>
     )
 }

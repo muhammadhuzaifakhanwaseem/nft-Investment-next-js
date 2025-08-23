@@ -9,6 +9,7 @@ import { ArrowLeft, Send, Loader2 } from "lucide-react"
 import Link from "next/link"
 import SuccessAlert from "@/components/success-alert"
 import { useUser } from "@/app/context/UserContext"
+import DashboardLayout from "@/components/DashboardLayout"
 
 export default function page() {
     const [phone, setPhone] = useState("")
@@ -85,9 +86,9 @@ export default function page() {
     }
 
     return (
-        <>
+        <DashboardLayout>
             <SuccessAlert open={open} message={message} />
-            <div className="min-h-screen bg-gradient-to-br from-slate-950 via-green-950 to-slate-950 p-4">
+            <div className="min-h-screen bg-gradient-to-br from-slate-950 via-green-950 to-slate-950 p-4 pb-30">
                 <div className="max-w-md mx-auto pt-3">
                     {/* Header */}
                     <div className="flex items-center gap-4 mb-6">
@@ -177,6 +178,6 @@ export default function page() {
                     </Card>
                 </div>
             </div>
-        </>
+        </DashboardLayout>
     )
 }
