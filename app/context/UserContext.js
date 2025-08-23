@@ -1,5 +1,5 @@
 "use client"
-import { redirect, useRouter } from "next/navigation"
+import { redirect, usePathname, useRouter } from "next/navigation"
 import { createContext, useContext, useEffect, useState } from "react"
 
 const UserContext = createContext(null)
@@ -8,6 +8,9 @@ export function UserProvider({ children }) {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
   const [loading, setLoading] = useState(true)
+
+  const pathname = usePathname()
+  const router = useRouter()
 
   const fetchUser = async () => {
     try {
@@ -27,9 +30,15 @@ export function UserProvider({ children }) {
       setLoading(false)
     }
   }
+
   useEffect(() => {
-    fetchUser()
-  }, [])
+    // only run if not on login/register
+    if (pathname !== "/login" && pathname !== "/register") {
+      fetchUser()
+    } else {
+      setLoading(false) // skip fetch
+    }
+  }, [pathname])
 
   const logout = async () => {
     await fetch("/api/logout", { method: "POST" })
