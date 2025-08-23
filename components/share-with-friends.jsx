@@ -19,10 +19,6 @@ export function ShareWithFriends({ user }) {
       setCopied(true)
       toast("Link copied!", {
         description: "Referral link has been copied to your clipboard.",
-        // action: {
-        //   label: "Undo",
-        //   onClick: () => console.log("Undo"),
-        // }
       })
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {

@@ -5,12 +5,13 @@ import { ArrowLeft, Loader2 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useUser } from "@/app/context/UserContext"
 
 export default function LogPage() {
     const [withdrawals, setWithdrawals] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const token = localStorage.getItem("auth_token")
+    const { token } = useUser();
     const logHeadings = ["Transaction ID", "Amount", "Charge", "Method ID", "Status", "Date", "Reason"]
 
     const fetchWithdrawals = async () => {

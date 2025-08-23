@@ -20,8 +20,7 @@ const InvestModal = ({
     selectedPlan
 }) => {
 
-    const { fetchUser } = useUser()
-    const token = localStorage.getItem("auth_token")
+    const { token } = useUser();
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState({})
 
@@ -39,7 +38,6 @@ const InvestModal = ({
 
             const data = await res.json();
             if (data.status) {
-                await fetchUser();
                 setOpen(true)
                 setMessage({ title: "Success", desc: data?.message, type: "success" })
                 setTimeout(() => {

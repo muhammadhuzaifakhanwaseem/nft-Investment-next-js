@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { ArrowLeft, Send, Loader2 } from "lucide-react"
 import Link from "next/link"
 import SuccessAlert from "@/components/success-alert"
+import { useUser } from "@/app/context/UserContext"
 
 export default function page() {
     const [phone, setPhone] = useState("")
@@ -15,7 +16,7 @@ export default function page() {
     const [isLoading, setIsLoading] = useState(false)
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState({})
-    const token = localStorage.getItem("auth_token")
+    const { token } = useUser();
     const handleSubmit = async (e) => {
         e.preventDefault()
 

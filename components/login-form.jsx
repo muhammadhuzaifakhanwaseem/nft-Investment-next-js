@@ -34,9 +34,6 @@ export default function LoginForm({ className, ...props }) {
 
       if (!res.ok || !data.success) throw new Error(data.message)
 
-      localStorage.setItem("auth_token", data.login_token)
-      localStorage.setItem("user", JSON.stringify(data.user))
-
       router.push("/dashboard")
     } catch (err) {
       setMessage(err.message)

@@ -17,13 +17,14 @@ import {
     TableHeader, TableRow
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useUser } from "@/app/context/UserContext"
 
 export default function LogPage() {
     const [deposits, setDeposits] = useState([])
     const [loading, setLoading] = useState(true)
     const [selectedDeposit, setSelectedDeposit] = useState(null)
 
-    const token = localStorage.getItem("auth_token")
+    const { token } = useUser();
 
     const fetchData = async () => {
         try {

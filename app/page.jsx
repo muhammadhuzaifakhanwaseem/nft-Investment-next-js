@@ -13,12 +13,13 @@ import Link from "next/link"
 import logo from '@/public/mepx.png'
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { useUser } from "./context/UserContext"
 
 export default function page() {
   const [loggedIn, setLoggedIn] = useState(false)
   const router = useRouter()
+  const { token } = useUser();
   useEffect(() => {
-    const token = localStorage.getItem("auth_token")
     if (!token) {
       setLoggedIn(false)
     } else {

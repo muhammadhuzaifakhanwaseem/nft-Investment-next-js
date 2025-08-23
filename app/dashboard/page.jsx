@@ -67,22 +67,13 @@ export default function NFTInvestmentDashboard() {
     { url: "", title: "Customer Support", action: () => setSupportModalOpen(true) },
   ]
 
-  const { logout, user, loading } = useUser();
-
-  const token = localStorage.getItem("auth_token");
+  const { logout, user, token } = useUser();
 
   const openWhatsAppSupport = () => {
     const message = "Hi, I need help with my investment account"
     const whatsappNumber = "+923001234567" // Replace with actual number
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank")
   }
-
-  if (loading)
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-100">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    )
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-gray-800 to-green-900 flex">

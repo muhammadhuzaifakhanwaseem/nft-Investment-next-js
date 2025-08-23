@@ -6,12 +6,13 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { useUser } from "@/app/context/UserContext"
 
 export default function TransferLogsPage() {
     const [logs, setLogs] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const token = localStorage.getItem("auth_token")
+    const { token } = useUser();
     useEffect(() => {
         if (!token) return;
         fetchTransferLogs()

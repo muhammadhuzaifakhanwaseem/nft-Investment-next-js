@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { redirect } from "next/navigation"
 import SuccessAlert from "@/components/success-alert"
+import { useUser } from "@/app/context/UserContext"
 
 export default function DepositPage() {
   const [currentStep, setCurrentStep] = useState(1)
@@ -84,7 +85,8 @@ export default function DepositPage() {
     setMethodName(method)
   }
 
-  const token = localStorage.getItem("auth_token")
+  const { token } = useUser();
+
   const [open, setOpen] = useState(false)
   const [message, setMessage] = useState({})
 
@@ -186,9 +188,8 @@ export default function DepositPage() {
             {[1, 2, 3, 4].map((step) => (
               <div key={step} className="flex items-center">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                    step <= currentStep ? "bg-emerald-600 text-white" : "bg-gray-700 text-gray-400"
-                  }`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step <= currentStep ? "bg-emerald-600 text-white" : "bg-gray-700 text-gray-400"
+                    }`}
                 >
                   {step}
                 </div>
@@ -224,11 +225,10 @@ export default function DepositPage() {
                     <div
                       key={key}
                       onClick={() => handleMethodSelect(key)}
-                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                        selectedMethod === key
+                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedMethod === key
                           ? "border-emerald-500 bg-emerald-500/10"
                           : "border-gray-700 bg-gray-800/30 hover:border-gray-600"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center gap-3">
                         <div className={`p-2 rounded-lg ${method.color} text-white`}>{method.icon}</div>

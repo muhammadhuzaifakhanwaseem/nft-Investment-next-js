@@ -19,12 +19,13 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
+import { useUser } from "@/app/context/UserContext"
 
 export default function UserRankPage() {
   const [ranksData, setRanksData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const token = localStorage.getItem("auth_token")
+  const { token } = useUser();
   const fetchUserRank = async () => {
     try {
       setLoading(true)
@@ -255,8 +256,8 @@ export default function UserRankPage() {
                 <div
                   key={rank.rank_id}
                   className={`p-4 rounded-xl border transition-all ${rank.rank_id === currentRank.rank_id
-                      ? "bg-green-500/10 border-green-500/50 shadow-lg"
-                      : "bg-slate-800/30 border-slate-700/50 hover:border-slate-600/50"
+                    ? "bg-green-500/10 border-green-500/50 shadow-lg"
+                    : "bg-slate-800/30 border-slate-700/50 hover:border-slate-600/50"
                     }`}
                 >
                   <div className="flex items-center justify-between mb-3">

@@ -5,12 +5,13 @@ import { ArrowLeft, RefreshCw } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useUser } from "@/app/context/UserContext"
 
 export default function InvestmentLogPage() {
     const [investments, setInvestments] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const token = localStorage.getItem("auth_token")
+    const { token } = useUser();
     const fetchInvestments = async () => {
         try {
             setLoading(true)
@@ -106,8 +107,6 @@ export default function InvestmentLogPage() {
         })
     }
 
-    console.log(investments)
-
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4">
             <div className="max-w-6xl mx-auto">
@@ -169,38 +168,26 @@ export default function InvestmentLogPage() {
                                 <Table>
                                     <TableHeader>
                                         <TableRow className="bg-gray-800/50 hover:bg-gray-800/50 border-gray-700">
-                                            <TableHead className="text-gray-300 whitespace-nowrap">Transaction ID</TableHead>
-                                            <TableHead className="text-gray-300 whitespace-nowrap">Plan</TableHead>
-                                            <TableHead className="text-gray-300 whitespace-nowrap">Final Amount</TableHead>
-                                            <TableHead className="text-gray-300 whitespace-nowrap">Type</TableHead>
-                                            <TableHead className="text-gray-300 whitespace-nowrap">Status</TableHead>
-                                            <TableHead className="text-gray-300 whitespace-nowrap">Next Payment</TableHead>
+                                            <TableHead className="text-gray-300 whitespace-nowrap">TRX</TableHead>
+                                            <TableHead className="text-gray-300 whitespace-nowrap">Interest Amount</TableHead>
+                                            <TableHead className="text-gray-300 whitespace-nowrap">Purpose</TableHead>
                                             <TableHead className="text-gray-300 whitespace-nowrap">Created</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
                                         {investments.map((investment) => (
-                                            <TableRow key={investment?.data?.id} className="border-gray-700 hover:bg-gray-800/30">
+                                            <TableRow key={investment?.payment_id} className="border-gray-700 hover:bg-gray-800/30">
                                                 <TableCell className="font-medium text-white whitespace-nowrap font-mono text-sm">
-                                                    {investment?.data?.transaction_id}
+                                                    {investment?.payment_id}
                                                 </TableCell>
-                                                <TableCell className="text-white whitespace-nowrap">{investment?.data.plan?.plan_name}</TableCell>
                                                 <TableCell className="text-white whitespace-nowrap">
-                                                    PKR {formatAmount(investment?.data?.final_amount)}
+                                                    PKR {formatAmount(investment?.interest_amount)}
                                                 </TableCell>
                                                 <TableCell className="text-blue-400 whitespace-nowrap">
-                                                    {getPaymentTypeText(investment?.data.payment_type)}
-                                                </TableCell>
-                                                <TableCell
-                                                    className={`font-medium ${getStatusColor(investment?.data.payment_status)} whitespace-nowrap`}
-                                                >
-                                                    {getStatusText(investment?.data.payment_status)}
+                                                    {investment?.purpouse}
                                                 </TableCell>
                                                 <TableCell className="text-gray-400 whitespace-nowrap text-sm">
-                                                    {formatDate(investment?.data.next_payment_date)}
-                                                </TableCell>
-                                                <TableCell className="text-gray-400 whitespace-nowrap text-sm">
-                                                    {formatDate(investment?.data.created_at)}
+                                                    {formatDate(investment?.created_at)}
                                                 </TableCell>
                                             </TableRow>
                                         ))}

@@ -96,7 +96,6 @@ export default function TeamPage() {
             summary: json.data.summary,
             totalTeam: json.data.total_team,
           })
-          console.log(json.data)
         } else {
           throw new Error(json.message || "Failed to fetch team data")
         }
@@ -208,7 +207,7 @@ export default function TeamPage() {
     totalDeposit: teamData.level1.totalDeposit + teamData.level2.totalDeposit + teamData.level3.totalDeposit,
     totalUsers: teamData.level1.totalUsers + teamData.level2.totalUsers + teamData.level3.totalUsers,
   }
-console.log(totalStats)
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4">
       <div className="max-w-4xl mx-auto">
