@@ -123,8 +123,8 @@ export default function InvestmentLogPage() {
                             <ArrowLeft className="h-5 w-5" />
                         </Button>
                         <div className="flex-1">
-                            <h1 className="text-2xl font-bold text-white">Total Profit</h1>
-                            <p className="text-gray-400">View your total profit</p>
+                            <h1 className="text-2xl font-bold text-white">Today's Profit</h1>
+                            <p className="text-gray-400">View your Daily profit</p>
                         </div>
                         <Button
                             variant="outline"
