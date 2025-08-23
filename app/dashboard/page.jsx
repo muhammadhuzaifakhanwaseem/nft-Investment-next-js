@@ -67,7 +67,11 @@ export default function NFTInvestmentDashboard() {
     { url: "", title: "Customer Support", action: () => setSupportModalOpen(true) },
   ]
 
-  const { logout, user, token } = useUser();
+  const { logout, user, token, fetchUser } = useUser();
+
+  useEffect(() => {
+    fetchUser()
+  }, []);
 
   const openWhatsAppSupport = () => {
     const message = "Hi, I need help with my investment account"
