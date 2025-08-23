@@ -5,19 +5,12 @@ import { ArrowLeft, RefreshCw } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import Cookies from "js-cookie"
 
 export default function InvestmentLogPage() {
     const [investments, setInvestments] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [token, setToken] = useState("")
-
-    useEffect(() => {
-        const authToken = Cookies.get("auth_token")
-        setToken(authToken || "")
-    }, [])
-
+    const token = localStorage.getItem("auth_token")
     const fetchInvestments = async () => {
         try {
             setLoading(true)

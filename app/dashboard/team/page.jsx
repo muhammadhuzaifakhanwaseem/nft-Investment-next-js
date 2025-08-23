@@ -44,62 +44,57 @@ export default function TeamPage() {
         const json = await res.json()
 
         if (json.status) {
-          const sampleMembers = [
-            {
-              name: "John Smith",
-              avatar: "JS",
-              status: "active",
-              investment: 5000,
-              commission: 250,
-            },
-            {
-              name: "Sarah Johnson",
-              avatar: "SJ",
-              status: "active",
-              investment: 3500,
-              commission: 175,
-            },
-            {
-              name: "Mike Davis",
-              avatar: "MD",
-              status: "inactive",
-              investment: 2000,
-              commission: 100,
-            },
-          ]
-
           setTeamData({
             level1: {
               totalCommission: json.data.level_1.total_commission || 0,
               totalInvestment: json.data.level_1.total_investment || 0,
               totalDeposit: json.data.level_1.total_deposit || 0,
               totalUsers: json.data.level_1.members_count || 0,
-              members:
-                json.data.level_1.members_count > 0
-                  ? sampleMembers.slice(0, Math.min(3, json.data.level_1.members_count))
-                  : [],
+              members: json.data.level_1.users.map((user) => ({
+                id: user.id,
+                name: user.fname && user.lname ? `${user.fname} ${user.lname}` : user.username,
+                username: user.username,
+                avatar: user.username.substring(0, 2).toUpperCase(),
+                status: user.status === 1 ? "active" : "inactive",
+                balance: Number.parseFloat(user.balance),
+                investment: 0,
+                commission: 0,
+              })),
             },
             level2: {
               totalCommission: json.data.level_2.total_commission || 0,
               totalInvestment: json.data.level_2.total_investment || 0,
               totalDeposit: json.data.level_2.total_deposit || 0,
               totalUsers: json.data.level_2.members_count || 0,
-              members:
-                json.data.level_2.members_count > 0
-                  ? sampleMembers.slice(0, Math.min(2, json.data.level_2.members_count))
-                  : [],
+              members: json.data.level_2.users.map((user) => ({
+                id: user.id,
+                name: user.fname && user.lname ? `${user.fname} ${user.lname}` : user.username,
+                username: user.username,
+                avatar: user.username.substring(0, 2).toUpperCase(),
+                status: user.status === 1 ? "active" : "inactive",
+                balance: Number.parseFloat(user.balance),
+                investment: 0,
+                commission: 0,
+              })),
             },
             level3: {
               totalCommission: json.data.level_3.total_commission || 0,
               totalInvestment: json.data.level_3.total_investment || 0,
               totalDeposit: json.data.level_3.total_deposit || 0,
               totalUsers: json.data.level_3.members_count || 0,
-              members:
-                json.data.level_3.members_count > 0
-                  ? sampleMembers.slice(0, Math.min(1, json.data.level_3.members_count))
-                  : [],
+              members: json.data.level_3.users.map((user) => ({
+                id: user.id,
+                name: user.fname && user.lname ? `${user.fname} ${user.lname}` : user.username,
+                username: user.username,
+                avatar: user.username.substring(0, 2).toUpperCase(),
+                status: user.status === 1 ? "active" : "inactive",
+                balance: Number.parseFloat(user.balance),
+                investment: 0,
+                commission: 0,
+              })),
             },
             summary: json.data.summary,
+            totalTeam: json.data.total_team,
           })
           console.log(json.data)
         } else {
@@ -115,7 +110,6 @@ export default function TeamPage() {
 
     fetchTeamData()
   }, [])
-
 
   const getLevelIcon = (level) => {
     switch (level) {
@@ -147,7 +141,7 @@ export default function TeamPage() {
     new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "PKR",
-      minimumFractionDigits: 2,
+      minimumFractionDigits: 0,
     }).format(amount)
 
   const safePercentage = (numerator, denominator) => {
@@ -206,7 +200,7 @@ export default function TeamPage() {
     return <div className="text-center text-white p-10">No data available</div>
   }
 
-  const totalStats = {
+  const totalStats = teamData.totalTeam || {
     totalCommission:
       teamData.level1.totalCommission + teamData.level2.totalCommission + teamData.level3.totalCommission,
     totalInvestment:
@@ -214,7 +208,7 @@ export default function TeamPage() {
     totalDeposit: teamData.level1.totalDeposit + teamData.level2.totalDeposit + teamData.level3.totalDeposit,
     totalUsers: teamData.level1.totalUsers + teamData.level2.totalUsers + teamData.level3.totalUsers,
   }
-
+console.log(totalStats)
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4">
       <div className="max-w-4xl mx-auto">
@@ -239,7 +233,7 @@ export default function TeamPage() {
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs">Total Commission</p>
-                  <p className="text-white font-bold text-sm">{formatCurrency(totalStats.totalCommission)}</p>
+                  <p className="text-white font-bold text-sm">{formatCurrency(totalStats?.total_commission)}</p>
                 </div>
               </div>
             </CardContent>
@@ -253,7 +247,7 @@ export default function TeamPage() {
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs">Total Investment</p>
-                  <p className="text-white font-bold text-sm">{formatCurrency(totalStats.totalInvestment)}</p>
+                  <p className="text-white font-bold text-sm">{formatCurrency(totalStats?.total_investment)}</p>
                 </div>
               </div>
             </CardContent>
@@ -267,7 +261,7 @@ export default function TeamPage() {
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs">Total Deposit</p>
-                  <p className="text-white font-bold text-sm">{formatCurrency(totalStats.totalDeposit)}</p>
+                  <p className="text-white font-bold text-sm">{formatCurrency(totalStats?.total_deposit)}</p>
                 </div>
               </div>
             </CardContent>
@@ -281,7 +275,7 @@ export default function TeamPage() {
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs">Total Users</p>
-                  <p className="text-white font-bold text-sm">{totalStats.totalUsers}</p>
+                  <p className="text-white font-bold text-sm">{totalStats?.members_count}</p>
                 </div>
               </div>
             </CardContent>
@@ -352,7 +346,7 @@ export default function TeamPage() {
                   </div>
 
                   {/* Performance Progress */}
-                  <div className="bg-white/10 rounded-lg p-4">
+                  {/* <div className="bg-white/10 rounded-lg p-4">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-gray-300 text-sm">Level Performance</span>
                       <span className="text-white text-sm font-semibold">
@@ -360,7 +354,7 @@ export default function TeamPage() {
                       </span>
                     </div>
                     <Progress value={safePercentage(data.totalInvestment, 150000)} className="h-2" />
-                  </div>
+                  </div> */}
 
                   {/* Expanded Member List */}
                   {isExpanded && (
@@ -373,7 +367,10 @@ export default function TeamPage() {
                       {data.members.length > 0 ? (
                         <div className="space-y-3">
                           {data.members.map((member, index) => (
-                            <div key={index} className="flex items-center justify-between bg-white/10 rounded-lg p-3">
+                            <div
+                              key={member.id || index}
+                              className="flex items-center justify-between bg-white/10 rounded-lg p-3"
+                            >
                               <div className="flex items-center gap-3">
                                 <Avatar className="w-10 h-10">
                                   <AvatarImage src="/placeholder.svg" />
@@ -382,26 +379,14 @@ export default function TeamPage() {
                                   </AvatarFallback>
                                 </Avatar>
                                 <div>
-                                  <p className="text-white font-medium">{member.name}</p>
-                                  <div className="flex items-center gap-2">
-                                    <Badge
-                                      className={`text-xs ${member.status === "active"
-                                          ? "bg-green-500/20 text-green-400"
-                                          : "bg-red-500/20 text-red-400"
-                                        }`}
-                                    >
-                                      {member.status}
-                                    </Badge>
-                                  </div>
+                                  <p className="text-white font-medium">@{member.username}</p>
+                                  
                                 </div>
                               </div>
-                              <div className="text-right">
-                                <p className="text-white font-semibold">{formatCurrency(member.investment)}</p>
-                                <p className="text-green-400 text-sm">+{formatCurrency(member.commission)}</p>
+                              <div className="text-right text-xs">
+                                <p className="text-white font-semibold">{formatCurrency(member.balance)}</p>
+                                <p className="text-gray-400">Balance</p>
                               </div>
-                              <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
-                                <Eye className="h-4 w-4" />
-                              </Button>
                             </div>
                           ))}
 
@@ -436,20 +421,18 @@ export default function TeamPage() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center p-4 bg-green-500/10 rounded-lg">
-                <div className="text-2xl font-bold text-green-400 mb-1">
-                  {safePercentage(totalStats.totalCommission, totalStats.totalInvestment)}%
-                </div>
+                <div className="text-2xl font-bold text-green-400 mb-1">{teamData.summary?.commission_rate || 0}%</div>
                 <p className="text-gray-400 text-sm">Commission Rate</p>
               </div>
               <div className="text-center p-4 bg-blue-500/10 rounded-lg">
                 <div className="text-2xl font-bold text-blue-400 mb-1">
-                  PKR {safeAverage(totalStats.totalInvestment, totalStats.totalUsers).toLocaleString()}
+                  PKR {(teamData.summary?.avg_investment_per_user || 0).toLocaleString()}
                 </div>
                 <p className="text-gray-400 text-sm">Avg Investment per User</p>
               </div>
               <div className="text-center p-4 bg-green-500/10 rounded-lg">
                 <div className="text-2xl font-bold text-green-400 mb-1">
-                  {safePercentage(totalStats.totalDeposit, totalStats.totalInvestment)}%
+                  {teamData.summary?.deposit_to_investment_ratio || 0}%
                 </div>
                 <p className="text-gray-400 text-sm">Deposit to Investment Ratio</p>
               </div>

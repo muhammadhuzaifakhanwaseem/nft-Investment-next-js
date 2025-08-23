@@ -1,26 +1,59 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { ArrowLeft, Copy, Check, Upload, ArrowRight, Building, CreditCard, Receipt } from "lucide-react"
+import { useState } from "react"
+import {
+  ArrowLeft,
+  Copy,
+  Check,
+  Upload,
+  ArrowRight,
+  Building,
+  CreditCard,
+  Receipt,
+  Smartphone,
+  Banknote,
+} from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import Cookies from "js-cookie"
 import { redirect } from "next/navigation"
-import SuccessAlert from '@/components/success-alert';
+import SuccessAlert from "@/components/success-alert"
 
 export default function DepositPage() {
   const [currentStep, setCurrentStep] = useState(1)
+  const [selectedMethod, setSelectedMethod] = useState("")
   const [copiedField, setCopiedField] = useState("")
   const [amount, setAmount] = useState("")
+  const [method_name, setMethodName] = useState("")
   const [uploadedFile, setUploadedFile] = useState(null)
 
-  const bankInfo = {
-    accountNumber: "00300112211311",
-    accountTitle: "Muhammad Raees",
-    ibanNumber: "PK08MEZN0000300112211311",
+  const paymentMethods = {
+    UBL: {
+      name: "UBL Bank",
+      icon: <Building className="h-6 w-6" />,
+      accountNumber: "00300112211311",
+      accountTitle: "Muhammad Raees",
+      ibanNumber: "PK08MEZN0000300112211311",
+      color: "bg-blue-600",
+    },
+    "Jazz Cash": {
+      name: "Jazz Cash",
+      icon: <Smartphone className="h-6 w-6" />,
+      accountNumber: "03001234567",
+      accountTitle: "Muhammad Raees",
+      ibanNumber: "N/A",
+      color: "bg-orange-600",
+    },
+    Easypaisa: {
+      name: "Easypaisa",
+      icon: <Smartphone className="h-6 w-6" />,
+      accountNumber: "03009876543",
+      accountTitle: "Muhammad Raees",
+      ibanNumber: "N/A",
+      color: "bg-green-600",
+    },
   }
 
   const copyToClipboard = async (text, field) => {
@@ -41,67 +74,70 @@ export default function DepositPage() {
   }
 
   const handleNext = () => {
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       setCurrentStep(currentStep + 1)
     }
   }
 
-  const [token, setToken] = useState("");
+  const handleMethodSelect = (method) => {
+    setSelectedMethod(method)
+    setMethodName(method)
+  }
 
-  useEffect(() => {
-    const authToken = Cookies.get("auth_token");
-    setToken(authToken || "");
-  }, []);
-
+  const token = localStorage.getItem("auth_token")
   const [open, setOpen] = useState(false)
   const [message, setMessage] = useState({})
 
   const handleSubmit = async () => {
     if (!amount || !uploadedFile) {
-      alert("Please enter amount and upload receipt");
-      return;
+      alert("Please enter amount and upload receipt")
+      return
     }
 
     try {
-      const formData = new FormData();
-      formData.append("login_token", token);
-      formData.append("amount", amount);
-      formData.append("is_mine", 0); // optional
-      formData.append("payment_proof", uploadedFile);
+      const formData = new FormData()
+      formData.append("login_token", token)
+      formData.append("amount", amount)
+      formData.append("is_mine", 0)
+      formData.append("payment_proof", uploadedFile)
+      formData.append("method_name", selectedMethod)
 
       const res = await fetch("https://stocktitan.site/api/deposit", {
         method: "POST",
         body: formData,
-      });
+      })
 
-      const data = await res.json();
+      const data = await res.json()
 
       if (res.ok) {
         setOpen(true)
-        setMessage({ title: "Success", desc: data.message || "Deposit request submitted successfully!", type: "success" })
+        setMessage({
+          title: "Success",
+          desc: data.message || "Deposit request submitted successfully!",
+          type: "success",
+        })
         setTimeout(() => {
           setOpen(false)
-          redirect("/dashboard/deposit/log");
-          setCurrentStep(1);
-          setAmount("");
-          setUploadedFile(null);
-        }, 3000);
+          redirect("/dashboard/deposit/log")
+        }, 3000)
       } else {
-        alert(data.message || "Something went wrong");
+        alert(data.message || "Something went wrong")
       }
     } catch (error) {
-      console.error("Error submitting deposit:", error);
-      alert("Failed to submit deposit");
+      console.error("Error submitting deposit:", error)
+      alert("Failed to submit deposit")
     }
-  };
+  }
 
   const getStepIcon = (step) => {
     switch (step) {
       case 1:
-        return <Building className="h-5 w-5" />
+        return <Banknote className="h-5 w-5" />
       case 2:
-        return <CreditCard className="h-5 w-5" />
+        return <Building className="h-5 w-5" />
       case 3:
+        return <CreditCard className="h-5 w-5" />
+      case 4:
         return <Receipt className="h-5 w-5" />
       default:
         return null
@@ -111,10 +147,12 @@ export default function DepositPage() {
   const getStepTitle = (step) => {
     switch (step) {
       case 1:
-        return "Bank Details"
+        return "Select Method"
       case 2:
-        return "Enter Amount"
+        return selectedMethod ? `${selectedMethod} Details` : "Payment Details"
       case 3:
+        return "Enter Amount"
+      case 4:
         return "Upload Receipt"
       default:
         return ""
@@ -136,29 +174,33 @@ export default function DepositPage() {
           </Button>
           <div>
             <h1 className="text-xl font-bold text-white">Deposit Funds</h1>
-            <p className="text-gray-400 text-sm">Step {currentStep} of 3</p>
+            <p className="text-gray-400 text-sm">
+              Step {currentStep} of 4{selectedMethod && <span className="text-emerald-400"> • {selectedMethod}</span>}
+            </p>
           </div>
         </div>
 
         {/* Progress Bar */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            {[1, 2, 3].map((step) => (
+            {[1, 2, 3, 4].map((step) => (
               <div key={step} className="flex items-center">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step <= currentStep ? "bg-emerald-600 text-white" : "bg-gray-700 text-gray-400"
-                    }`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                    step <= currentStep ? "bg-emerald-600 text-white" : "bg-gray-700 text-gray-400"
+                  }`}
                 >
                   {step}
                 </div>
-                {step < 3 && (
-                  <div className={`w-16 h-1 mx-2 ${step < currentStep ? "bg-emerald-600" : "bg-gray-700"}`} />
+                {step < 4 && (
+                  <div className={`w-12 h-1 mx-1 ${step < currentStep ? "bg-emerald-600" : "bg-gray-700"}`} />
                 )}
               </div>
             ))}
           </div>
           <div className="flex justify-between text-xs text-gray-400">
-            <span>Bank Info</span>
+            <span>Method</span>
+            <span>Details</span>
             <span>Amount</span>
             <span>Receipt</span>
           </div>
@@ -173,22 +215,63 @@ export default function DepositPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {/* Step 1: Bank Details */}
             {currentStep === 1 && (
               <div className="space-y-4">
-                <p className="text-gray-400 text-sm mb-4">Copy these bank details to make your deposit</p>
+                <p className="text-gray-400 text-sm mb-4">Choose your preferred payment method</p>
+
+                <div className="grid gap-3">
+                  {Object.entries(paymentMethods).map(([key, method]) => (
+                    <div
+                      key={key}
+                      onClick={() => handleMethodSelect(key)}
+                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                        selectedMethod === key
+                          ? "border-emerald-500 bg-emerald-500/10"
+                          : "border-gray-700 bg-gray-800/30 hover:border-gray-600"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-lg ${method.color} text-white`}>{method.icon}</div>
+                        <div className="flex-1">
+                          <h3 className="text-white font-semibold">{method.name}</h3>
+                          <p className="text-gray-400 text-sm">{key === "UBL" ? "Bank Transfer" : "Mobile Wallet"}</p>
+                        </div>
+                        {selectedMethod === key && <Check className="h-5 w-5 text-emerald-400" />}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <Button
+                  onClick={handleNext}
+                  disabled={!selectedMethod}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 mt-6 disabled:opacity-50"
+                >
+                  Next
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </div>
+            )}
+
+            {currentStep === 2 && selectedMethod && (
+              <div className="space-y-4">
+                <p className="text-gray-400 text-sm mb-4">Copy these {selectedMethod} details to make your deposit</p>
 
                 {/* Account Number */}
                 <div className="bg-gray-800/30 rounded-lg p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="text-gray-400 text-sm">Account Number</Label>
-                      <p className="text-white font-semibold text-xs font-mono">{bankInfo.accountNumber}</p>
+                      <Label className="text-gray-400 text-sm">
+                        {selectedMethod === "UBL" ? "Account Number" : "Mobile Number"}
+                      </Label>
+                      <p className="text-white font-semibold text-xs font-mono">
+                        {paymentMethods[selectedMethod].accountNumber}
+                      </p>
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => copyToClipboard(bankInfo.accountNumber, "accountNumber")}
+                      onClick={() => copyToClipboard(paymentMethods[selectedMethod].accountNumber, "accountNumber")}
                       className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-green-950"
                     >
                       {copiedField === "accountNumber" ? (
@@ -205,12 +288,12 @@ export default function DepositPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <Label className="text-gray-400 text-sm">Account Title</Label>
-                      <p className="text-white font-semibold text-xs">{bankInfo.accountTitle}</p>
+                      <p className="text-white font-semibold text-xs">{paymentMethods[selectedMethod].accountTitle}</p>
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => copyToClipboard(bankInfo.accountTitle, "accountTitle")}
+                      onClick={() => copyToClipboard(paymentMethods[selectedMethod].accountTitle, "accountTitle")}
                       className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-green-950"
                     >
                       {copiedField === "accountTitle" ? (
@@ -222,37 +305,50 @@ export default function DepositPage() {
                   </div>
                 </div>
 
-                {/* IBAN Number */}
-                <div className="bg-gray-800/30 rounded-lg p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-gray-400 text-sm">IBAN Number</Label>
-                      <p className="text-white font-semibold text-xs font-mono">{bankInfo.ibanNumber}</p>
+                {/* IBAN Number (only for UBL) */}
+                {selectedMethod === "UBL" && (
+                  <div className="bg-gray-800/30 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <Label className="text-gray-400 text-sm">IBAN Number</Label>
+                        <p className="text-white font-semibold text-xs font-mono">
+                          {paymentMethods[selectedMethod].ibanNumber}
+                        </p>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyToClipboard(paymentMethods[selectedMethod].ibanNumber, "ibanNumber")}
+                        className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-green-950"
+                      >
+                        {copiedField === "ibanNumber" ? (
+                          <Check className="h-4 w-4 text-green-400" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => copyToClipboard(bankInfo.ibanNumber, "ibanNumber")}
-                      className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-green-950"
-                    >
-                      {copiedField === "ibanNumber" ? (
-                        <Check className="h-4 w-4 text-green-400" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
                   </div>
-                </div>
+                )}
 
-                <Button onClick={handleNext} className="w-full bg-emerald-600 hover:bg-emerald-700 mt-6">
-                  Next
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
+                <div className="flex gap-3">
+                  <Button
+                    onClick={() => setCurrentStep(1)}
+                    variant="outline"
+                    className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800 bg-green-700"
+                  >
+                    Back
+                  </Button>
+                  <Button onClick={handleNext} className="flex-1 bg-emerald-600 hover:bg-emerald-700">
+                    Next
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </div>
               </div>
             )}
 
-            {/* Step 2: Enter Amount */}
-            {currentStep === 2 && (
+            {/* Step 3: Enter Amount (previously Step 2) */}
+            {currentStep === 3 && (
               <div className="space-y-6">
                 <p className="text-gray-400 text-sm">Enter the amount you want to deposit</p>
 
@@ -278,7 +374,7 @@ export default function DepositPage() {
 
                 <div className="flex gap-3">
                   <Button
-                    onClick={() => setCurrentStep(1)}
+                    onClick={() => setCurrentStep(2)}
                     variant="outline"
                     className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800 bg-green-700"
                   >
@@ -296,13 +392,17 @@ export default function DepositPage() {
               </div>
             )}
 
-            {/* Step 3: Upload Receipt */}
-            {currentStep === 3 && (
+            {/* Step 4: Upload Receipt (previously Step 3) */}
+            {currentStep === 4 && (
               <div className="space-y-6">
                 <p className="text-gray-400 text-sm">Upload your payment receipt to complete the deposit</p>
 
                 {/* Amount Summary */}
                 <div className="bg-gray-800/30 rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-gray-400">Payment Method:</span>
+                    <span className="text-white font-bold">{selectedMethod}</span>
+                  </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-400">Deposit Amount:</span>
                     <span className="text-white font-bold">PKR {amount}</span>
@@ -343,7 +443,7 @@ export default function DepositPage() {
 
                 <div className="flex gap-3">
                   <Button
-                    onClick={() => setCurrentStep(2)}
+                    onClick={() => setCurrentStep(3)}
                     variant="outline"
                     className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800 bg-green-700"
                   >

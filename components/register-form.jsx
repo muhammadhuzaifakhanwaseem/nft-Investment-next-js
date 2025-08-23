@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils"
 import { redirect } from "next/navigation"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
-import Cookies from "js-cookie"
 
 export default function RegisterForm({ className, ...props }) {
 

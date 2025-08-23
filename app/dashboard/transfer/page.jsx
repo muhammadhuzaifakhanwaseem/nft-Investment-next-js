@@ -7,8 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ArrowLeft, Send, Loader2 } from "lucide-react"
 import Link from "next/link"
-import Cookies from "js-cookie"
-import { toast } from "sonner"
 import SuccessAlert from "@/components/success-alert"
 
 export default function page() {
@@ -17,13 +15,7 @@ export default function page() {
     const [isLoading, setIsLoading] = useState(false)
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState({})
-
-    const [token, setToken] = useState("")
-    useEffect(() => {
-        const authToken = Cookies.get("auth_token")
-        setToken(authToken || "")
-    }, [])
-
+    const token = localStorage.getItem("auth_token")
     const handleSubmit = async (e) => {
         e.preventDefault()
 

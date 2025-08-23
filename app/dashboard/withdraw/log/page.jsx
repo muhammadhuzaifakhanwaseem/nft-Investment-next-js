@@ -5,13 +5,12 @@ import { ArrowLeft, Loader2 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import Cookies from "js-cookie"
 
 export default function LogPage() {
     const [withdrawals, setWithdrawals] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-
+    const token = localStorage.getItem("auth_token")
     const logHeadings = ["Transaction ID", "Amount", "Charge", "Method ID", "Status", "Date", "Reason"]
 
     const fetchWithdrawals = async () => {
@@ -45,17 +44,10 @@ export default function LogPage() {
         }
     }
 
-    const [token, setToken] = useState("")
-
     useEffect(() => {
         if (!token) return;
         fetchWithdrawals()
     }, [token])
-
-    useEffect(() => {
-        const authToken = Cookies.get("auth_token")
-        setToken(authToken || "")
-    }, [])
 
     const getStatusColor = (status) => {
         switch (status) {

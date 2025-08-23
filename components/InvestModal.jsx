@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import Cookies from 'js-cookie'
 import {
     TrendingUp
 } from "lucide-react"
@@ -22,19 +21,7 @@ const InvestModal = ({
 }) => {
 
     const { fetchUser } = useUser()
-
-    const [token, setToken] = useState("");
-
-    useEffect(() => {
-        const authToken = Cookies.get("auth_token");
-        setToken(authToken || "");
-    }, []);
-
-    useEffect(() => {
-        const authToken = Cookies.get("auth_token");
-        setToken(authToken || "");
-    }, []);
-
+    const token = localStorage.getItem("auth_token")
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState({})
 

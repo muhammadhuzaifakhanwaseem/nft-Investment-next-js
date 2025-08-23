@@ -6,14 +6,12 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import Cookies from "js-cookie"
 
 export default function TransferLogsPage() {
     const [logs, setLogs] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-
-    const [token, setToken] = useState("")
+    const token = localStorage.getItem("auth_token")
     useEffect(() => {
         if (!token) return;
         fetchTransferLogs()
@@ -42,11 +40,6 @@ export default function TransferLogsPage() {
             setLoading(false)
         }
     }
-
-    useEffect(() => {
-        const authToken = Cookies.get("auth_token")
-        setToken(authToken || "")
-    }, [])
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString("en-US", {

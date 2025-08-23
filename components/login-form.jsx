@@ -1,14 +1,12 @@
 "use client"
-import { useEffect, useState } from "react"
-import { redirect, useRouter } from "next/navigation"
-import { setCookie } from "cookies-next"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
-import Cookies from "js-cookie"
 
 export default function LoginForm({ className, ...props }) {
   const router = useRouter()
@@ -36,17 +34,8 @@ export default function LoginForm({ className, ...props }) {
 
       if (!res.ok || !data.success) throw new Error(data.message)
 
-      // Save token to cookies (valid for 7 days)
-      setCookie("auth_token", data.login_token, {
-        maxAge: 60 * 60 * 24 * 7,
-        path: "/"
-      })
-
-      // You can store other user data if needed too
-      setCookie("user", JSON.stringify(data.user), {
-        maxAge: 60 * 60 * 24 * 7,
-        path: "/"
-      })
+      localStorage.setItem("auth_token", data.login_token)
+      localStorage.setItem("user", JSON.stringify(data.user))
 
       router.push("/dashboard")
     } catch (err) {

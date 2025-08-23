@@ -6,14 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import Cookies from "js-cookie"
 
 export default function TransactionLogPage() {
     const [transactionData, setTransactionData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
-    const [token, setToken] = useState("")
+    const token = localStorage.getItem("auth_token")
 
     const fetchTransactions = async () => {
         try {
@@ -50,11 +49,6 @@ export default function TransactionLogPage() {
         if (!token) return;
         fetchTransactions()
     }, [token])
-
-    useEffect(() => {
-        const authToken = Cookies.get("auth_token")
-        setToken(authToken || "")
-    }, [])
 
     const getPaymentStatusColor = (status) => {
         switch (status) {
@@ -167,15 +161,15 @@ export default function TransactionLogPage() {
                     <div className="flex-1">
                         <h1 className="text-2xl font-bold text-white">Transaction Log</h1>
                         <p className="text-gray-400">View your recent activities</p>
-                    <Button
-                        onClick={fetchTransactions}
-                        variant="outline"
-                        size="sm"
-                        className="border-gray-600 mt-3 text-white hover:bg-gray-800/50 bg-transparent"
-                    >
-                        <RefreshCw className="h-4 w-4 mr-2" />
-                        Refresh
-                    </Button>
+                        <Button
+                            onClick={fetchTransactions}
+                            variant="outline"
+                            size="sm"
+                            className="border-gray-600 mt-3 text-white hover:bg-gray-800/50 bg-transparent"
+                        >
+                            <RefreshCw className="h-4 w-4 mr-2" />
+                            Refresh
+                        </Button>
                     </div>
                 </div>
 

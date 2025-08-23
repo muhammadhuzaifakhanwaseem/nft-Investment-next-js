@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Cookies from "js-cookie"
 import { ArrowLeft } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -20,10 +19,11 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function LogPage() {
-    const [token, setToken] = useState("")
     const [deposits, setDeposits] = useState([])
     const [loading, setLoading] = useState(true)
     const [selectedDeposit, setSelectedDeposit] = useState(null)
+
+    const token = localStorage.getItem("auth_token")
 
     const fetchData = async () => {
         try {
@@ -51,11 +51,6 @@ export default function LogPage() {
         fetchData()
     }, [token])
 
-    useEffect(() => {
-        const authToken = Cookies.get("auth_token")
-        setToken(authToken || "")
-    }, [])
-
     const getStatusColor = (status) => {
         switch (status) {
             case "success":
@@ -72,9 +67,9 @@ export default function LogPage() {
     }
 
     const statusMap = {
-        0: "Pending",
+        0: "Rejected",
         1: "Success",
-        2: "Failed"
+        2: "Pending"
     }
 
     return (
@@ -149,24 +144,18 @@ export default function LogPage() {
                                                                 </DialogDescription>
                                                             </DialogHeader>
                                                             <div className="grid grid-cols-2 gap-4 text-sm">
-                                                                <div><strong>ID:</strong> {selectedDeposit?.id}</div>
-                                                                <div><strong>User ID:</strong> {selectedDeposit?.user_id}</div>
-                                                                <div><strong>Gateway ID:</strong> {selectedDeposit?.gateway_id}</div>
-                                                                <div><strong>Amount:</strong> {selectedDeposit?.amount}</div>
-                                                                <div><strong>Rate:</strong> {selectedDeposit?.rate}</div>
-                                                                <div><strong>Charge:</strong> {selectedDeposit?.charge}</div>
-                                                                <div><strong>Final Amount:</strong> {selectedDeposit?.final_amount}</div>
+                                                                <div><strong>TRX:</strong> {selectedDeposit?.id}</div>
+                                                                <div><strong>Gateway:</strong> {selectedDeposit?.method_name}</div>
+                                                                <div><strong>Final Amount:</strong> <br /> PKR {Number(selectedDeposit?.final_amount).toFixed(0)}</div>
                                                                 <div><strong>Status:</strong> {status}</div>
-                                                                <div><strong>Is Mine:</strong> {selectedDeposit?.is_mine ? "Yes" : "No"}</div>
-                                                                <div><strong>Created At:</strong> {new Date(selectedDeposit?.created_at).toLocaleString()}</div>
-                                                                <div><strong>Updated At:</strong> {new Date(selectedDeposit?.updated_at).toLocaleString()}</div>
+                                                                <div><strong>Payment Date:</strong> {new Date(selectedDeposit?.created_at).toLocaleString()}</div>
                                                                 <div className="col-span-2">
                                                                     <strong>Payment Proof:</strong>
                                                                     {selectedDeposit?.payment_proof?.provide_screenshoot?.file ? (
                                                                         <img
-                                                                            src={`https://stocktitan.site/public/storage/payment_proofs/${selectedDeposit.payment_proof.provide_screenshoot.file}`}
+                                                                            src={`https://stocktitan.site/core/storage/app/public/payment_proofs/${selectedDeposit.payment_proof.provide_screenshoot.file}`}
                                                                             alt="Payment Proof"
-                                                                            className="mt-2 w-full max-h-80 object-contain border border-gray-700"
+                                                                            className="object-contain max-h-[200px] w-auto border border-gray-700"
                                                                         />
                                                                     ) : (
                                                                         <div className="text-gray-500 mt-2">No payment proof available.</div>

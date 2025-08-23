@@ -12,18 +12,20 @@ import Image from "next/image"
 import Link from "next/link"
 import logo from '@/public/mepx.png'
 import { useEffect, useState } from "react"
-import Cookies from "js-cookie"
+import { useRouter } from "next/navigation"
 
 export default function page() {
   const [loggedIn, setLoggedIn] = useState(false)
+  const router = useRouter()
   useEffect(() => {
-    const authToken = Cookies.get("auth_token")
-    if (authToken.length > 1) {
-      setLoggedIn(true)
-    } else {
+    const token = localStorage.getItem("auth_token")
+    if (!token) {
       setLoggedIn(false)
+    } else {
+      setLoggedIn(true)
     }
-  }, [])
+  }, [router])
+
   return (
     <div className="h-[92vh] bg-gradient-to-br from-[gray-500] to-[gray-800] relative overflow-hidden flex flex-col">
       {/* Background Video */}
