@@ -23,12 +23,14 @@ import { Progress } from "@/components/ui/progress"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import Link from "next/link"
 import DashboardLayout from "@/components/DashboardLayout"
+import { useUser } from "@/app/context/UserContext"
 
 export default function TeamPage() {
   const [expandedLevel, setExpandedLevel] = useState(null)
   const [teamData, setTeamData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const { token } = useUser();
 
   useEffect(() => {
     const fetchTeamData = async () => {
@@ -36,7 +38,12 @@ export default function TeamPage() {
         setLoading(true)
         setError(null)
 
-        const res = await fetch("https://stocktitan.site/api/team-details/2300")
+        const res = await fetch("https://stocktitan.site/api/team-details", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        })
 
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`)
