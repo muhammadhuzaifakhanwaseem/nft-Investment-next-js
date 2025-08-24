@@ -94,6 +94,8 @@ export default function WithdrawModal({ withdrawModalOpen, setWithdrawModalOpen,
           setOpen(false)
           redirect("/dashboard/withdraw/log")
         }, 5000)
+      }else{
+        alert(data?.message || 'Error In Submission')
       }
     } catch (error) {
       console.error(error)
