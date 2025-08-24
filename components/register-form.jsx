@@ -70,13 +70,12 @@ export default function RegisterForm({ className, ...props }) {
             <Card className="w-full max-w-sm bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
                 <CardHeader className="text-center">
                     <CardTitle className="text-xl text-white">Create an Account</CardTitle>
-                    <CardDescription className="text-green-400">Register with your mobile number</CardDescription>
+                    <CardDescription className="text-green-400">Register with your mobile number <br /> {referral ? `Referred By ${referral}` : ""}</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit}>
                         <div className="grid gap-4">
                             {message && <p className="text-sm text-center text-red-400">{message}</p>}
-
                             <div>
                                 <Label htmlFor="name" className="text-gray-300">Name</Label>
                                 <Input
