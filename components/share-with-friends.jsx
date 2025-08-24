@@ -11,7 +11,7 @@ export function ShareWithFriends({ user }) {
   const [copied, setCopied] = useState(false)
 
   const domain = typeof window !== "undefined" ? window.location.origin : ""
-  const referralLink = `${domain}/register?referred_by=${user?.id}`
+  const referralLink = `${domain}/register?reffered_by=${user?.id}`
 
   const copyToClipboard = async () => {
     try {
