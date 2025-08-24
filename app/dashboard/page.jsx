@@ -52,7 +52,7 @@ export default function NFTInvestmentDashboard() {
 
   const menuItems = [
     { url: "/dashboard/deposit/log", title: "My Deposits" },
-    { url: "/dashboard/withdraw/log", title: "My Withdawls" },
+    { url: "/dashboard/withdraw/log", title: "My Withdrawals" },
     { url: "/dashboard/transactions/log", title: "My Transactions" },
     { url: "/dashboard/investments/log", title: "My Investments" },
     { url: "/dashboard/profit/daily", title: "My Daily Profits" },
