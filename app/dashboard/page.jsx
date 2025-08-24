@@ -10,6 +10,9 @@ import {
   X,
   MessageCircle,
   HelpCircle,
+  AlertCircleIcon,
+  PopcornIcon,
+  CheckCircle2Icon,
 } from "lucide-react"
 
 import { Card, CardContent } from "@/components/ui/card"
@@ -29,6 +32,8 @@ import logo from '@/public/mepx.png'
 import { ShareWithFriends } from "@/components/share-with-friends"
 import { usePathname } from "next/navigation"
 import DashboardLayout from "@/components/DashboardLayout"
+import AnnouncementModal from "@/components/announcement-modal"
+import HelpButtonGuide from "@/components/help-button-guide"
 
 export default function NFTInvestmentDashboard() {
   const [investModalOpen, setInvestModalOpen] = useState(false)
@@ -71,14 +76,27 @@ export default function NFTInvestmentDashboard() {
     fetchUser()
   }, []);
 
-  const openWhatsAppSupport = () => {
-    const message = "Hi, I need help with my investment account"
-    const whatsappNumber = "+923001234567" // Replace with actual number
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank")
+  const [showHelpGuide, setShowHelpGuide] = useState(false)
+
+  useEffect(() => {
+    const hasSeenHelpGuide = localStorage.getItem("hasSeenHelpGuide")
+    if (!hasSeenHelpGuide) {
+      const timer = setTimeout(() => {
+        setShowHelpGuide(true)
+      }, 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
+  const handleCloseHelpGuide = () => {
+    setShowHelpGuide(false)
+    localStorage.setItem("hasSeenHelpGuide", "true")
   }
 
   return (
     <DashboardLayout>
+      <AnnouncementModal />
+      {showHelpGuide && <HelpButtonGuide onClose={handleCloseHelpGuide} />}
       <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-gray-800 to-green-900 flex pb-30">
         {isOpen && <div className="fixed inset-0 bg-white/30 backdrop-blur-xs z-30" onClick={() => setIsOpen(false)} />}
         <div
@@ -244,22 +262,20 @@ export default function NFTInvestmentDashboard() {
         </div>
 
         <Button
-          onClick={openWhatsAppSupport}
           className="fixed bottom-40 right-4 bg-green-600 hover:bg-green-700 text-white rounded-full w-12 h-12 shadow-lg z-30"
           size="icon"
         >
-          <MessageCircle className="h-3 w-3" />
+          <Link href={'/help'}>
+            <MessageCircle className="h-3 w-3" />
+          </Link>
         </Button>
 
         <Button
           className="fixed bottom-55 right-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-12 h-12 shadow-lg z-30"
           size="icon"
+          onClick={() => { setSupportModalOpen(true) }}
         >
-          <Link
-            href={'/help'}
-          >
-            <HelpCircle className="h-3 w-3" />
-          </Link>
+          <HelpCircle className="h-3 w-3" />
         </Button>
 
         <InvestModal

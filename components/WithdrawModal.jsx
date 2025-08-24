@@ -94,7 +94,7 @@ export default function WithdrawModal({ withdrawModalOpen, setWithdrawModalOpen,
           setOpen(false)
           redirect("/dashboard/withdraw/log")
         }, 5000)
-      }else{
+      } else {
         alert(data?.message || 'Error In Submission')
       }
     } catch (error) {
@@ -149,22 +149,36 @@ export default function WithdrawModal({ withdrawModalOpen, setWithdrawModalOpen,
               </div>
             )}
 
-            {/* Dropdown */}
-            <div>
-              <Label className="text-gray-300 mb-3">Withdrawal Method</Label>
-              <select
-                className="w-full bg-gray-800/50 border border-gray-700 text-white p-2 rounded disabled:opacity-50"
-                value={methodId}
-                onChange={(e) => setMethodId(e.target.value)}
-                disabled={fieldsDisabled}
-              >
-                <option value="">Select method</option>
-                {methods.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.name}
-                  </option>
-                ))}
-              </select>
+            <div className="flex items-center gap-2.5">
+              {/* Dropdown */}
+              <div className="w-[50%]">
+                <Label className="text-gray-300 mb-3">Withdrawal Method</Label>
+                <select
+                  className="w-full bg-gray-800/50 border h-10 px-2 border-gray-700 text-white rounded disabled:opacity-50"
+                  value={methodId}
+                  onChange={(e) => setMethodId(e.target.value)}
+                  disabled={fieldsDisabled}
+                >
+                  <option value="">Select method</option>
+                  {methods.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Amount - always editable */}
+              <div className="w-[50%]">
+                <Label className="text-gray-300 mb-3">Withdrawal Amount</Label>
+                <Input
+                  type="number"
+                  placeholder="0.00"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="bg-gray-800/50 border-gray-700 h-10 text-white placeholder:text-gray-500"
+                />
+              </div>
             </div>
 
             {/* Instructions */}
@@ -177,18 +191,6 @@ export default function WithdrawModal({ withdrawModalOpen, setWithdrawModalOpen,
                 />
               </div>
             )}
-
-            {/* Amount - always editable */}
-            <div>
-              <Label className="text-gray-300 mb-3">Withdrawal Amount</Label>
-              <Input
-                type="number"
-                placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
-              />
-            </div>
 
             {/* Only show account fields when not bound or in edit mode */}
             {shouldShowAccountFields && (

@@ -108,9 +108,14 @@ export default function InvestmentLogPage() {
         })
     }
 
+    const totalInterest = investments.reduce(
+        (sum, investment) => sum + (Number(investment?.interest_amount) || 0),
+        0
+    );
+
     return (
         <DashboardLayout>
-             <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4 pb-30">
+            <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4 pb-30">
                 <div className="max-w-6xl mx-auto">
                     {/* Header */}
                     <div className="flex items-center gap-4 mb-6">
@@ -144,7 +149,7 @@ export default function InvestmentLogPage() {
                             <CardTitle className="text-white flex items-center justify-between">
                                 All Investments
                                 {!loading && (
-                                    <span className="text-sm font-normal text-gray-400">{investments.length} total investments</span>
+                                    <span className="text-sm font-normal text-gray-400">PKR {totalInterest} Today Profit</span>
                                 )}
                             </CardTitle>
                         </CardHeader>
@@ -171,6 +176,7 @@ export default function InvestmentLogPage() {
                                         <TableHeader>
                                             <TableRow className="bg-gray-800/50 hover:bg-gray-800/50 border-gray-700">
                                                 <TableHead className="text-gray-300 whitespace-nowrap">TRX</TableHead>
+                                                <TableHead className="text-gray-300 whitespace-nowrap">Plan</TableHead>
                                                 <TableHead className="text-gray-300 whitespace-nowrap">Interest Amount</TableHead>
                                                 <TableHead className="text-gray-300 whitespace-nowrap">Purpose</TableHead>
                                                 <TableHead className="text-gray-300 whitespace-nowrap">Created</TableHead>
@@ -181,6 +187,9 @@ export default function InvestmentLogPage() {
                                                 <TableRow key={investment?.payment_id} className="border-gray-700 hover:bg-gray-800/30">
                                                     <TableCell className="font-medium text-white whitespace-nowrap font-mono text-sm">
                                                         {investment?.payment_id}
+                                                    </TableCell>
+                                                    <TableCell className="font-medium text-white whitespace-nowrap font-mono text-sm">
+                                                        {investment?.plan_details?.plan_name}
                                                     </TableCell>
                                                     <TableCell className="text-white whitespace-nowrap">
                                                         PKR {formatAmount(investment?.interest_amount)}
