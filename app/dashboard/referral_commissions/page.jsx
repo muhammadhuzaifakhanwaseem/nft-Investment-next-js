@@ -9,11 +9,12 @@ import { useUser } from "@/app/context/UserContext"
 import DashboardLayout from "@/components/DashboardLayout"
 
 export default function Referral() {
-    const [investments, setInvestments] = useState([])
+    const [commissions, setCommissions] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const { token } = useUser();
-    const fetchInvestments = async () => {
+
+    const fetchCommissions = async () => {
         try {
             setLoading(true)
             setError(null)
@@ -36,7 +37,7 @@ export default function Referral() {
             const data = await response.json()
 
             if (data) {
-                setInvestments(data?.data || [])
+                setCommissions(data?.data || [])
             }
         } catch (err) {
             setError(err instanceof Error ? err.message : "An error occurred")
@@ -47,49 +48,8 @@ export default function Referral() {
 
     useEffect(() => {
         if (!token) return;
-        fetchInvestments()
+        fetchCommissions()
     }, [token])
-
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 1:
-                return "text-green-400"
-            case 0:
-                return "text-yellow-400"
-            case 2:
-                return "text-blue-400"
-            case -1:
-                return "text-red-400"
-            default:
-                return "text-gray-400"
-        }
-    }
-
-    const getStatusText = (status) => {
-        switch (status) {
-            case 1:
-                return "Active"
-            case 0:
-                return "Pending"
-            case 2:
-                return "Processing"
-            case -1:
-                return "Cancelled"
-            default:
-                return "Unknown"
-        }
-    }
-
-    const getPaymentTypeText = (type) => {
-        switch (type) {
-            case 1:
-                return "Investment"
-            case 2:
-                return "Deposit"
-            default:
-                return "Other"
-        }
-    }
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString("en-US", {
@@ -123,13 +83,13 @@ export default function Referral() {
                             <ArrowLeft className="h-5 w-5" />
                         </Button>
                         <div className="flex-1">
-                            <h1 className="text-2xl font-bold text-white">Referral commissions</h1>
-                            <p className="text-gray-400">View your Referral commissions</p>
+                            <h1 className="text-2xl font-bold text-white">Referral Commissions</h1>
+                            <p className="text-gray-400">View your earned referral commissions</p>
                         </div>
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={fetchInvestments}
+                            onClick={fetchCommissions}
                             disabled={loading}
                             className="bg-gray-800/50 border-gray-700 text-white hover:bg-gray-700/50"
                         >
@@ -138,13 +98,13 @@ export default function Referral() {
                         </Button>
                     </div>
 
-                    {/* Investment Table Card */}
+                    {/* Commissions Table Card */}
                     <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
                         <CardHeader>
                             <CardTitle className="text-white flex items-center justify-between">
-                                All Investments
+                                All Referral Commissions
                                 {!loading && (
-                                    <span className="text-sm font-normal text-gray-400">{investments.length} total investments</span>
+                                    <span className="text-sm font-normal text-gray-400">{commissions.length} total records</span>
                                 )}
                             </CardTitle>
                         </CardHeader>
@@ -152,14 +112,14 @@ export default function Referral() {
                             {loading ? (
                                 <div className="flex items-center justify-center py-8">
                                     <RefreshCw className="h-6 w-6 animate-spin text-gray-400 mr-2" />
-                                    <span className="text-gray-400">Loading investments...</span>
+                                    <span className="text-gray-400">Loading commissions...</span>
                                 </div>
                             ) : error ? (
                                 <div className="text-center py-8">
                                     <p className="text-red-400 mb-4">{error}</p>
                                     <Button
                                         variant="outline"
-                                        onClick={fetchInvestments}
+                                        onClick={fetchCommissions}
                                         className="bg-gray-800/50 border-gray-700 text-white hover:bg-gray-700/50"
                                     >
                                         Try Again
@@ -170,45 +130,29 @@ export default function Referral() {
                                     <Table>
                                         <TableHeader>
                                             <TableRow className="bg-gray-800/50 hover:bg-gray-800/50 border-gray-700">
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Transaction ID</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Plan</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Final Amount</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Type</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Status</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Next Payment</TableHead>
-                                                <TableHead className="text-gray-300 whitespace-nowrap">Created</TableHead>
+                                                <TableHead className="text-gray-300 whitespace-nowrap">ID</TableHead>
+                                                <TableHead className="text-gray-300 whitespace-nowrap">Referred By</TableHead>
+                                                <TableHead className="text-gray-300 whitespace-nowrap">Referred To</TableHead>
+                                                <TableHead className="text-gray-300 whitespace-nowrap">Purpose</TableHead>
+                                                <TableHead className="text-gray-300 whitespace-nowrap">Amount</TableHead>
+                                                <TableHead className="text-gray-300 whitespace-nowrap">Created At</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
-                                            {investments.map((investment) => (
-                                                <TableRow key={investment?.data?.id} className="border-gray-700 hover:bg-gray-800/30">
-                                                    <TableCell className="font-medium text-white whitespace-nowrap font-mono text-sm">
-                                                        {investment?.data?.transaction_id}
-                                                    </TableCell>
-                                                    <TableCell className="text-white whitespace-nowrap">{investment?.data.plan?.plan_name}</TableCell>
-                                                    <TableCell className="text-white whitespace-nowrap">
-                                                        PKR {formatAmount(investment?.data?.final_amount)}
-                                                    </TableCell>
-                                                    <TableCell className="text-blue-400 whitespace-nowrap">
-                                                        {getPaymentTypeText(investment?.data.payment_type)}
-                                                    </TableCell>
-                                                    <TableCell
-                                                        className={`font-medium ${getStatusColor(investment?.data.payment_status)} whitespace-nowrap`}
-                                                    >
-                                                        {getStatusText(investment?.data.payment_status)}
-                                                    </TableCell>
-                                                    <TableCell className="text-gray-400 whitespace-nowrap text-sm">
-                                                        {formatDate(investment?.data.next_payment_date)}
-                                                    </TableCell>
-                                                    <TableCell className="text-gray-400 whitespace-nowrap text-sm">
-                                                        {formatDate(investment?.data.created_at)}
-                                                    </TableCell>
+                                            {commissions.map((c) => (
+                                                <TableRow key={c.id} className="border-gray-700 hover:bg-gray-800/30">
+                                                    <TableCell className="font-medium text-white">{c.id}</TableCell>
+                                                    <TableCell className="text-white">{c.reffered_by_username}</TableCell>
+                                                    <TableCell className="text-white">{c.reffered_to_username}</TableCell>
+                                                    <TableCell className="text-gray-300">{c.purpouse}</TableCell>
+                                                    <TableCell className="text-green-400 font-semibold">PKR {formatAmount(c.amount)}</TableCell>
+                                                    <TableCell className="text-gray-400 text-sm">{formatDate(c.created_at)}</TableCell>
                                                 </TableRow>
                                             ))}
                                         </TableBody>
                                     </Table>
-                                    {investments.length === 0 && (
-                                        <div className="text-center text-gray-400 py-8">No investments found.</div>
+                                    {commissions.length === 0 && (
+                                        <div className="text-center text-gray-400 py-8">No referral commissions found.</div>
                                     )}
                                 </div>
                             )}

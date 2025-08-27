@@ -9,10 +9,7 @@ import {
   Menu,
   X,
   MessageCircle,
-  HelpCircle,
-  AlertCircleIcon,
-  PopcornIcon,
-  CheckCircle2Icon,
+  HelpCircle
 } from "lucide-react"
 
 import { Card, CardContent } from "@/components/ui/card"
@@ -34,6 +31,8 @@ import { usePathname } from "next/navigation"
 import DashboardLayout from "@/components/DashboardLayout"
 import AnnouncementModal from "@/components/announcement-modal"
 import HelpButtonGuide from "@/components/help-button-guide"
+import { SupportsData } from "@/components/SupportsData"
+import { AdsSlider } from "@/components/AdsSlider"
 
 export default function NFTInvestmentDashboard() {
   const [investModalOpen, setInvestModalOpen] = useState(false)
@@ -67,6 +66,7 @@ export default function NFTInvestmentDashboard() {
     { url: "/dashboard/transfer/log", title: "All Transfers" },
     { url: "/dashboard/team", title: "My Team" },
     { url: "/dashboard/user-rank", title: "User Rank" },
+    { url: "/dashboard/profile", title: "Profile" },
     { url: "", title: "Customer Support", action: () => setSupportModalOpen(true) },
   ]
 
@@ -102,13 +102,13 @@ export default function NFTInvestmentDashboard() {
         <div
           className={`fixed inset-y-0 my-auto h-[90%] ${isOpen ? "left-[0]" : "-left-[100%]"} w-72 bg-gray-900 backdrop-blur-xl border-r border-green-500/40 rounded-r-3xl p-4 flex flex-col z-30 duration-300`}
         >
-          <div className="flex border-b-1 pb-4 border-green-400 items-center gap-3 mb-4">
+          <Link href={'/dashboard/profile'} className="flex border-b-1 pb-4 border-green-400 items-center gap-3 mb-4">
             <Image src={logo} alt="logo" width={40} height={40} />
             <div>
               <h2 className="text-base font-semibold text-white leading-5">{user?.username}</h2>
               <p className="text-sm text-gray-400">{user?.phone}</p>
             </div>
-          </div>
+          </Link>
           <div className="flex flex-col gap-3 text-md text-white">
             {menuItems.map((item, i) =>
               item.action ? (
@@ -143,7 +143,7 @@ export default function NFTInvestmentDashboard() {
           <div className="flex-1 p-6 pb-32">
             <div className="w-full">
               <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
+                <Link href={'/dashboard/profile'} className="flex items-center gap-3">
                   <Avatar className="w-10 h-10">
                     <Image src={logo} alt="logo" width={40} height={40} />
                   </Avatar>
@@ -151,7 +151,7 @@ export default function NFTInvestmentDashboard() {
                     <h1 className="text-white font-semibold">Hi, {user?.username}!</h1>
                     <p className="text-gray-400 text-sm">Welcome back!</p>
                   </div>
-                </div>
+                </Link>
                 <button
                   onClick={() => setIsOpen(!isOpen)}
                   className=" bg-white text-gray-800 p-2 rounded-full shadow-md"
@@ -188,7 +188,8 @@ export default function NFTInvestmentDashboard() {
                   </div>
                 </CardContent>
               </Card>
-              <div className="mb-6">
+              <AdsSlider />
+              <div className="mb-6 mt-6">
                 <h2 className="text-white text-lg font-semibold mb-4">Investment Opportunities</h2>
                 <div className="space-y-3">
                   {investmentPlans?.length ? (
@@ -258,6 +259,7 @@ export default function NFTInvestmentDashboard() {
             {user ?
               <ShareWithFriends user={user} /> : ""
             }
+            <SupportsData />
           </div>
         </div>
 
@@ -291,6 +293,7 @@ export default function NFTInvestmentDashboard() {
           setWithdrawModalOpen={setWithdrawModalOpen}
           loginToken={token}
         />
+
         <CustomerSupportModal isOpen={supportModalOpen} onClose={() => setSupportModalOpen(false)} />
       </div>
     </DashboardLayout>

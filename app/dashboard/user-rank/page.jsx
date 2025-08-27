@@ -250,7 +250,9 @@ export default function UserRankPage() {
           <Card className="bg-slate-900/50 backdrop-blur border-slate-700/50">
             <CardHeader>
               <CardTitle className="text-white text-xl">All Ranks Overview</CardTitle>
-              <CardDescription className="text-slate-400">Your progress across all investment levels</CardDescription>
+              <CardDescription className="text-slate-400">
+                Detailed progress across all investment levels
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -271,23 +273,49 @@ export default function UserRankPage() {
                         Level {rank.level_number}
                       </Badge>
                     </div>
+
+                    {/* Progress */}
                     <div className="space-y-2">
                       <div className="flex justify-between text-xs">
                         <span className="text-slate-400">Progress</span>
                         <span className="text-white font-medium">{rank.progress_percentage}%</span>
                       </div>
                       <Progress value={rank.progress_percentage} className="h-2 bg-slate-800" />
-                      <div className="flex justify-between items-center mt-3">
-                        <span className="text-xs text-slate-400">Reward</span>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium text-green-400">{formatCurrency(rank.reward_amount)}</span>
-                          {rank.reward_received && <CheckCircle className="h-4 w-4 text-green-500" />}
-                          {!rank.reward_received && rank.progress_percentage < 100 && (
-                            <Clock className="h-4 w-4 text-slate-500" />
-                          )}
-                        </div>
+                    </div>
+
+                    {/* Requirements */}
+                    <div className="mt-3 text-xs space-y-1 text-slate-400">
+                      <div className="flex justify-between">
+                        <span>Personal Investment:</span>
+                        <span className="text-green-400 font-medium">
+                          {formatCurrency(rank.personal_investment_required)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Team Investment:</span>
+                        <span className="text-blue-400 font-medium">
+                          {formatCurrency(rank.team_investment_required)}
+                        </span>
                       </div>
                     </div>
+
+                    {/* Reward Section */}
+                    <div className="flex justify-between items-center mt-3">
+                      <span className="text-xs text-slate-400">Reward</span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm font-medium text-purple-400">
+                          {formatCurrency(rank.reward_amount)}
+                        </span>
+                        {rank.reward_received ? (
+                          <CheckCircle className="h-4 w-4 text-green-500" title="Received" />
+                        ) : rank.progress_percentage >= 100 ? (
+                          <Award className="h-4 w-4 text-yellow-500" title="Eligible - Claim Pending" />
+                        ) : (
+                          <Clock className="h-4 w-4 text-slate-500" title="In Progress" />
+                        )}
+                      </div>
+                    </div>
+                    
                   </div>
                 ))}
               </div>
