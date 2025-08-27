@@ -21,12 +21,19 @@ import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { useUser } from "@/app/context/UserContext"
 import DashboardLayout from "@/components/DashboardLayout"
+import { ShareWithFriends } from "@/components/share-with-friends"
+import { SupportsData } from "@/components/SupportsData"
 
 export default function UserRankPage() {
+
+  const { logout, user, token, fetchUser } = useUser();
+  useEffect(() => {
+    fetchUser()
+  }, []);
+
   const [ranksData, setRanksData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const { token } = useUser();
   const fetchUserRank = async () => {
     try {
       setLoading(true)
@@ -161,7 +168,7 @@ export default function UserRankPage() {
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-green-950 to-slate-950 p-6 pb-30">
-        <div className="max-w-7xl mx-auto space-y-8">
+        <div className="max-w-7xl mx-auto space-y-8 mb-1">
           <div className="flex items-center gap-4">
             <Link href="/dashboard" className="text-green-400 hover:bg-slate-800/50 p-3 rounded-xl transition-colors">
               <ArrowLeft className="h-6 w-6" />
@@ -175,22 +182,34 @@ export default function UserRankPage() {
           </div>
 
           <Card className="bg-gradient-to-r from-slate-900/80 to-green-900/30 backdrop-blur border-green-500/30 shadow-2xl">
-            <CardHeader className="text-center pb-4">
+            <CardHeader className="text-center pb-6">
               <div className="flex items-center justify-center space-x-3 mb-4">
-                <div className="p-3 bg-green-500/20 rounded-full">{getRankIcon(currentRank.rank_name)}</div>
+                <div className="p-3 bg-green-500/20 rounded-full">
+                  {getRankIcon(currentRank.rank_name)}
+                </div>
                 <div>
-                  <CardTitle className="text-3xl text-white font-bold">{currentRank.rank_name}</CardTitle>
-                  <Badge variant="secondary" className="bg-green-500/20 text-green-300 border-green-500/30 mt-2">
+                  <CardTitle className="text-3xl text-white font-bold">
+                    {currentRank.rank_name}
+                  </CardTitle>
+                  <Badge
+                    variant="secondary"
+                    className="bg-green-500/20 text-green-300 border-green-500/30 mt-2"
+                  >
                     Level {currentRank.level_number}
                   </Badge>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="space-y-6">
+
+            <CardContent className="space-y-8">
+              {/* Progress Section */}
               <div className="text-center">
                 <div className="text-slate-300 mb-3 font-medium">Progress to Next Level</div>
                 <div className="relative">
-                  <Progress value={Number.parseFloat(currentRank.progress_percentage)} className="h-4 bg-slate-800" />
+                  <Progress
+                    value={Number.parseFloat(currentRank.progress_percentage)}
+                    className="h-4 bg-slate-800"
+                  />
                   <div
                     className="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-500 rounded-full"
                     style={{ width: `${currentRank.progress_percentage}%` }}
@@ -201,51 +220,86 @@ export default function UserRankPage() {
                   {nextRank && <span>Next: {nextRank.rank_name}</span>}
                 </div>
               </div>
+
+              {/* Stats Section */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Personal Investment */}
+                <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50 hover:border-green-500/30 transition-colors">
+                  <div className="flex items-center justify-between mb-2">
+                    <CardTitle className="text-sm font-medium text-slate-300">
+                      Personal Investment Required
+                    </CardTitle>
+                    <div className="p-2 bg-green-500/20 rounded-lg">
+                      <DollarSign className="h-5 w-5 text-green-400" />
+                    </div>
+                  </div>
+                  <div className="text-2xl font-bold text-green-400">
+                    {formatCurrency(currentRank.personal_investment_required)}
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1">Current rank requirement</p>
+                </div>
+
+                {/* Team Investment */}
+                <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50 hover:border-blue-500/30 transition-colors">
+                  <div className="flex items-center justify-between mb-2">
+                    <CardTitle className="text-sm font-medium text-slate-300">
+                      Team Investment Required
+                    </CardTitle>
+                    <div className="p-2 bg-blue-500/20 rounded-lg">
+                      <Users className="h-5 w-5 text-blue-400" />
+                    </div>
+                  </div>
+                  <div className="text-2xl font-bold text-blue-400">
+                    {formatCurrency(currentRank.team_investment_required)}
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1">Current rank requirement</p>
+                </div>
+
+                {/* Rewards */}
+                <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50 hover:border-purple-500/30 transition-colors">
+                  <div className="flex items-center justify-between mb-2">
+                    <CardTitle className="text-sm font-medium text-slate-300">
+                      Total Rewards Earned
+                    </CardTitle>
+                    <div className="p-2 bg-purple-500/20 rounded-lg">
+                      <TrendingUp className="h-5 w-5 text-purple-400" />
+                    </div>
+                  </div>
+                  <div className="text-2xl font-bold text-purple-400">
+                    {formatCurrency(totalRewards)}
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1">From completed ranks</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="bg-slate-900/50 backdrop-blur border-slate-700/50 hover:border-green-500/30 transition-colors">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-300">Personal Investment Required</CardTitle>
-                <div className="p-2 bg-green-500/20 rounded-lg">
-                  <DollarSign className="h-5 w-5 text-green-400" />
+          <Card className="bg-slate-900/50 backdrop-blur border-slate-700/50">
+            <CardHeader>
+              <CardTitle className="text-white">Rank Summary</CardTitle>
+              <CardDescription className="text-slate-400">Overview of your rank progression</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="text-center">
+                  <div className="text-sm font-medium text-slate-400 mb-1">Current Rank</div>
+                  <div className="text-2xl font-bold text-white">{currentRank.rank_name}</div>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-green-400">
-                  {formatCurrency(currentRank.personal_investment_required)}
+                <div className="text-center">
+                  <div className="text-sm font-medium text-slate-400 mb-1">Level</div>
+                  <div className="text-2xl font-bold text-green-400">{currentRank.level_number}</div>
                 </div>
-                <p className="text-xs text-slate-500 mt-1">Current rank requirement</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-slate-900/50 backdrop-blur border-slate-700/50 hover:border-blue-500/30 transition-colors">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-300">Team Investment Required</CardTitle>
-                <div className="p-2 bg-blue-500/20 rounded-lg">
-                  <Users className="h-5 w-5 text-blue-400" />
+                <div className="text-center">
+                  <div className="text-sm font-medium text-slate-400 mb-1">Completed Ranks</div>
+                  <div className="text-2xl font-bold text-blue-400">{completedRanks.length}</div>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-blue-400">
-                  {formatCurrency(currentRank.team_investment_required)}
+                <div className="text-center">
+                  <div className="text-sm font-medium text-slate-400 mb-1">Total Rewards</div>
+                  <div className="text-1xl font-bold text-purple-400">{formatCurrency(totalRewards)}</div>
                 </div>
-                <p className="text-xs text-slate-500 mt-1">Current rank requirement</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-slate-900/50 backdrop-blur border-slate-700/50 hover:border-purple-500/30 transition-colors">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-300">Total Rewards Earned</CardTitle>
-                <div className="p-2 bg-purple-500/20 rounded-lg">
-                  <TrendingUp className="h-5 w-5 text-purple-400" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-purple-400">{formatCurrency(totalRewards)}</div>
-                <p className="text-xs text-slate-500 mt-1">From completed ranks</p>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
 
           <Card className="bg-slate-900/50 backdrop-blur border-slate-700/50">
             <CardHeader>
@@ -315,39 +369,14 @@ export default function UserRankPage() {
                         )}
                       </div>
                     </div>
-                    
+
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900/50 backdrop-blur border-slate-700/50">
-            <CardHeader>
-              <CardTitle className="text-white">Rank Summary</CardTitle>
-              <CardDescription className="text-slate-400">Overview of your rank progression</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div className="text-center">
-                  <div className="text-sm font-medium text-slate-400 mb-1">Current Rank</div>
-                  <div className="text-2xl font-bold text-white">{currentRank.rank_name}</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-sm font-medium text-slate-400 mb-1">Level</div>
-                  <div className="text-2xl font-bold text-green-400">{currentRank.level_number}</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-sm font-medium text-slate-400 mb-1">Completed Ranks</div>
-                  <div className="text-2xl font-bold text-blue-400">{completedRanks.length}</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-sm font-medium text-slate-400 mb-1">Total Rewards</div>
-                  <div className="text-2xl font-bold text-purple-400">{formatCurrency(totalRewards)}</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+
 
           <div className="text-center pb-8">
             <Button
@@ -359,6 +388,10 @@ export default function UserRankPage() {
             </Button>
           </div>
         </div>
+        {user ?
+          <ShareWithFriends user={user} /> : ""
+        }
+        <SupportsData />
       </div>
     </DashboardLayout>
   )

@@ -24,13 +24,19 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import Link from "next/link"
 import DashboardLayout from "@/components/DashboardLayout"
 import { useUser } from "@/app/context/UserContext"
+import { ShareWithFriends } from "@/components/share-with-friends"
+import { SupportsData } from "@/components/SupportsData"
 
 export default function TeamPage() {
   const [expandedLevel, setExpandedLevel] = useState(null)
   const [teamData, setTeamData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const { token } = useUser();
+
+  const { logout, user, token, fetchUser } = useUser();
+  useEffect(() => {
+    fetchUser()
+  }, []);
 
   useEffect(() => {
     const fetchTeamData = async () => {
@@ -219,7 +225,7 @@ export default function TeamPage() {
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4 pb-30">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto mb-6">
           {/* Header */}
           <div className="flex items-center gap-4 mb-6">
             <Link href="/dashboard" className="text-white hover:bg-gray-800/50 p-2 rounded-lg">
@@ -448,6 +454,10 @@ export default function TeamPage() {
             </CardContent>
           </Card>
         </div>
+        {user ?
+          <ShareWithFriends user={user} /> : ""
+        }
+        <SupportsData />
       </div>
     </DashboardLayout>
   )
