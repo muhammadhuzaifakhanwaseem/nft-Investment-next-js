@@ -230,18 +230,20 @@ export default function NFTInvestmentDashboard() {
                               PKR {Number(plan.minimum_amount ?? 0).toFixed(0)} <span className="text-white">to</span>{" "}
                               PKR {Number(plan.maximum_amount ?? 0).toFixed(0)}
                             </span>
-                            <Button
-                              onClick={() => {
-                                setSelectedPlan(plan)
-                                setInvestModalOpen(
-                                  true
-                                )
-                              }}
-                              size="sm"
-                              className={`bg-emerald-600 hover:bg-emerald-700`}
-                            >
-                              Buy
-                            </Button>
+                            {plan?.lock == 0 ?
+                              <Button
+                                onClick={() => {
+                                  setSelectedPlan(plan)
+                                  setInvestModalOpen(
+                                    true
+                                  )
+                                }}
+                                size="sm"
+                                className={`bg-emerald-600 hover:bg-emerald-700`}
+                              >
+                                Buy
+                              </Button> : "Locked"
+                            }
                           </div>
                           <p className="text-xs text-gray-400">
                             Capital Return:{" "}

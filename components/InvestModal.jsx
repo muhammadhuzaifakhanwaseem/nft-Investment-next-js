@@ -120,7 +120,7 @@ const InvestModal = ({
                                             <div className="flex justify-between">
                                                 <span className="text-gray-400">Daily Profit:</span>
                                                 <span className="text-green-400">
-                                                    PKR {((investAmount * Number(selectedPlan?.return_interest ?? 0)) / 100).toFixed(2)}
+                                                    PKR {(((investAmount * Number(selectedPlan?.return_interest ?? 0)) / 100) / selectedPlan?.time?.time * 24).toFixed(2)}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
