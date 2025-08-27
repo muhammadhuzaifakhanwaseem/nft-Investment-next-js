@@ -215,7 +215,13 @@ export default function NFTInvestmentDashboard() {
                                 {Number(plan.return_interest ?? 0).toFixed(0)}%
                               </p>
                               <p className="text-xs text-gray-400">
-                                {plan?.how_many_time > 1 ? "Daily Profit" : "Accumulated Profit"}
+                                {plan?.time?.time == 1
+                                  ? "Hourly"
+                                  : plan?.time?.time == 24
+                                    ? "Daily"
+                                    : plan?.how_many_time == 1 && plan?.time?.time != 1
+                                      ? "Accumulated Profit"
+                                      : ""}
                               </p>
                             </div>
                           </div>

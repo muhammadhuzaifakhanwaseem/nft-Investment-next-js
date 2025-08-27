@@ -65,24 +65,74 @@ const InvestModal = ({
                         </DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
+
                         {selectedPlan && (
                             <div className="bg-gray-800/30 rounded-lg p-4 space-y-2 text-sm">
                                 <div className="flex justify-between">
                                     <span className="text-gray-400">Your Balance:</span>
-                                    <span className="text-green-400">PKR {balance}</span>
+                                    <span className="text-yellow-600">PKR {balance}</span>
                                 </div>
-                                {investAmount ?
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-400">Daily Profit:</span>
-                                        <span className="text-green-400">{investAmount * Number(selectedPlan?.return_interest ?? 0).toFixed(0) / 100}</span>
-                                    </div>
-                                    : ""}
-                                {investAmount ?
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-400">Total Profit:</span>
-                                        <span className="text-green-400">{((investAmount * Number(selectedPlan?.return_interest ?? 0).toFixed(0) / 100) * selectedPlan?.every_time).toFixed(2)} </span>
-                                    </div>
-                                    : ""}
+                                {selectedPlan && investAmount ? (
+                                    selectedPlan?.time?.time == 1 ? (
+                                        <>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-400">Hourly Profit:</span>
+                                                <span className="text-green-400">
+                                                    PKR {((investAmount * Number(selectedPlan?.return_interest ?? 0)) / 100).toFixed(2)}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-400">Daily Profit:</span>
+                                                <span className="text-green-400">
+                                                    PKR {(((investAmount * Number(selectedPlan?.return_interest ?? 0)) / 100) * 24).toFixed(2)}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-400">Weekly Profit:</span>
+                                                <span className="text-green-400">
+                                                    PKR {(((investAmount * Number(selectedPlan?.return_interest ?? 0)) / 100) * 168).toFixed(2)}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-400">Monthly Profit:</span>
+                                                <span className="text-green-400">
+                                                    PKR {(((investAmount * Number(selectedPlan?.return_interest ?? 0)) / 100) * 720).toFixed(2)}
+                                                </span>
+                                            </div>
+                                        </>
+                                    ) : selectedPlan?.time?.time == 24 ? (
+                                        <>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-400">Daily Profit:</span>
+                                                <span className="text-green-400">
+                                                    PKR {((investAmount * Number(selectedPlan?.return_interest ?? 0)) / 100).toFixed(2)}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-400">Total Profit:</span>
+                                                <span className="text-green-400">
+                                                    PKR {(((investAmount * Number(selectedPlan?.return_interest ?? 0)) / 100) * selectedPlan?.how_many_time).toFixed(2)}
+                                                </span>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-400">Daily Profit:</span>
+                                                <span className="text-green-400">
+                                                    PKR {((investAmount * Number(selectedPlan?.return_interest ?? 0)) / 100).toFixed(2)}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-400">Total Profit:</span>
+                                                <span className="text-green-400">
+                                                    PKR {(((investAmount * Number(selectedPlan?.return_interest ?? 0)) / 100) * selectedPlan?.how_many_time).toFixed(2)}
+                                                </span>
+                                            </div>
+                                        </>
+                                    )
+                                ) : null}
+
                                 <div className="flex justify-between">
                                     <span className="text-gray-400">Duration:</span>
                                     <span className="text-white">{selectedPlan.time?.name}</span>
