@@ -231,14 +231,41 @@ export default function NFTInvestmentDashboard() {
                     investmentPlans.map((plan) => (
                       <Card
                         key={plan.id}
-                        className="bg-white/5 backdrop-blur-md border border-green-800/30 relative rounded-2xl"
+                        className="bg-white/5 backdrop-blur-md border border-green-800/30 relative rounded-2xl overflow-hidden"
                       >
-                        <Badge className="absolute -top-2 -right-2 bg-orange-500 text-white z-10">Popular</Badge>
+                        {/* Popular badge */}
+                        <Badge className="absolute -top-2 -right-2 bg-orange-500 text-white z-20">
+                          Popular
+                        </Badge>
+
+                        {/* 🔒 Lock overlay if locked */}
+                        {plan?.lock != 0 && (
+                          <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center gap-2 text-white">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-10 w-10 text-red-400"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M12 11c1.104 0 2 .896 2 2v5H10v-5c0-1.104.896-2 2-2zM8 11V7a4 4 0 118 0v4m-8 0h8"
+                              />
+                            </svg>
+                            <span className="text-sm font-semibold uppercase tracking-wide">
+                              Locked Plan
+                            </span>
+                          </div>
+                        )}
+
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-3">
-                              <div className={`p-2 bg-green-700 rounded-lg`}>
-                                <TrendingUp className={`h-5 w-5 text-white`} />
+                              <div className="p-2 bg-green-700 rounded-lg">
+                                <TrendingUp className="h-5 w-5 text-white" />
                               </div>
                               <div>
                                 <h3 className="font-semibold text-white">{plan.plan_name}</h3>
@@ -262,33 +289,34 @@ export default function NFTInvestmentDashboard() {
                           </div>
                           <div className="flex items-center justify-between mb-3">
                             <span className="text-sm text-green-400">
-                              PKR {Number(plan.minimum_amount ?? 0).toFixed(0)} <span className="text-white">to</span>{" "}
+                              PKR {Number(plan.minimum_amount ?? 0).toFixed(0)}{" "}
+                              <span className="text-white">to</span>{" "}
                               PKR {Number(plan.maximum_amount ?? 0).toFixed(0)}
                             </span>
-                            {plan?.lock == 0 ?
+                            {plan?.lock == 0 ? (
                               <Button
                                 onClick={() => {
-                                  setSelectedPlan(plan)
-                                  setInvestModalOpen(
-                                    true
-                                  )
+                                  setSelectedPlan(plan);
+                                  setInvestModalOpen(true);
                                 }}
                                 size="sm"
-                                className={`bg-emerald-600 hover:bg-emerald-700`}
+                                className="bg-emerald-600 hover:bg-emerald-700"
                               >
                                 Buy
-                              </Button> : "Locked"
-                            }
+                              </Button>
+                            ) : null}
                           </div>
                           <p className="text-xs text-gray-400">
                             Capital Return:{" "}
-                            <span className="text-emerald-400 font-medium">{plan.capital_back ? "Yes" : "No"}</span>
+                            <span className="text-emerald-400 font-medium">
+                              {plan.capital_back ? "Yes" : "No"}
+                            </span>
                           </p>
                         </CardContent>
                       </Card>
                     ))
                   ) : (
-                    <div className="border border-gray-200 rounded-lg shadow animate-pulse md:p-6 dark:border-gray-700">
+                    <div className="border border-gray-200 rounded-lg shadow animate-pulse p-6 dark:border-gray-700">
                       <div className="flex items-center justify-center h-48 mb-4 bg-gray-300 rounded dark:bg-gray-700"></div>
                       <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
                       <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
@@ -297,6 +325,7 @@ export default function NFTInvestmentDashboard() {
                     </div>
                   )}
                 </div>
+
               </div>
             </div>
             {user ?
