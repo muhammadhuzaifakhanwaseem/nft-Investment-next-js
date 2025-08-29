@@ -70,6 +70,8 @@ export default function UserRankPage() {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "PKR",
+      minimumFractionDigits: 0, // .00 forcefully remove
+      maximumFractionDigits: 0, // ensure no decimals
     }).format(Number.parseFloat(amount))
   }
 

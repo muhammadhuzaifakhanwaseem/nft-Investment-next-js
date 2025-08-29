@@ -234,7 +234,7 @@ export default function NFTInvestmentDashboard() {
                         className="bg-white/5 backdrop-blur-md border border-green-800/30 relative rounded-2xl overflow-hidden"
                       >
                         {/* Popular badge */}
-                        <Badge className="absolute -top-2 -right-2 bg-orange-500 text-white z-20">
+                        <Badge className="absolute top-0 right-0 bg-orange-500 text-white z-20">
                           Popular
                         </Badge>
 
