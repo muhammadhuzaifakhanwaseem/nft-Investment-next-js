@@ -12,7 +12,7 @@ export default function InvestmentLogPage() {
     const [investments, setInvestments] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const { token } = useUser();
+    const { token } = useUser()
     const fetchInvestments = async () => {
         try {
             setLoading(true)
@@ -48,7 +48,7 @@ export default function InvestmentLogPage() {
     }
 
     useEffect(() => {
-        if (!token) return;
+        if (!token) return
         fetchInvestments()
     }, [token])
 
@@ -110,6 +110,11 @@ export default function InvestmentLogPage() {
         })
     }
 
+    const totalAmount = investments.reduce((sum, investment) => {
+        const amount = Number.parseFloat(investment?.data?.final_amount || 0)
+        return sum + amount
+    }, 0)
+
     return (
         <DashboardLayout>
             <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4 pb-30">
@@ -139,6 +144,22 @@ export default function InvestmentLogPage() {
                             Refresh
                         </Button>
                     </div>
+
+                    {!loading && !error && investments.length > 0 && (
+                        <Card className="bg-gradient-to-r from-green-900/30 to-emerald-900/30 backdrop-blur-xl border-green-800/50 mb-6">
+                            <CardContent className="p-6">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-green-400 text-sm font-medium">Total Investment Amount</p>
+                                        <p className="text-white text-3xl font-bold">PKR {formatAmount(totalAmount)}</p>
+                                    </div>
+                                </div>
+                                <div className="text-green-400 text-sm">
+                                    {investments.length} investment{investments.length !== 1 ? "s" : ""}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
 
                     {/* Investment Table Card */}
                     <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
@@ -187,7 +208,9 @@ export default function InvestmentLogPage() {
                                                     <TableCell className="font-medium text-white whitespace-nowrap font-mono text-sm">
                                                         {investment?.data?.transaction_id}
                                                     </TableCell>
-                                                    <TableCell className="text-white whitespace-nowrap">{investment?.data.plan?.plan_name}</TableCell>
+                                                    <TableCell className="text-white whitespace-nowrap">
+                                                        {investment?.data.plan?.plan_name}
+                                                    </TableCell>
                                                     <TableCell className="text-white whitespace-nowrap">
                                                         PKR {formatAmount(investment?.data?.final_amount)}
                                                     </TableCell>
@@ -200,7 +223,9 @@ export default function InvestmentLogPage() {
                                                         {getStatusText(investment?.data.payment_status)}
                                                     </TableCell>
                                                     <TableCell className="text-gray-400 whitespace-nowrap text-sm">
-                                                        {formatDate(investment?.data.next_payment_date)}
+                                                        {investment?.data.next_payment_date
+                                                            ? formatDate(investment?.data.next_payment_date)
+                                                            : "Completed"}
                                                     </TableCell>
                                                     <TableCell className="text-gray-400 whitespace-nowrap text-sm">
                                                         {formatDate(investment?.data.created_at)}

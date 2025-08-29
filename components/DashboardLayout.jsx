@@ -14,7 +14,7 @@ const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: Home },
     { href: "/dashboard/team", label: "My Team", icon: Users },
     { href: "/dashboard/deposit", label: "Deposit", icon: CreditCard },
-    { href: "/dashboard/investments/log", label: "Plans", icon: BarChart3 },
+    { href: "/dashboard/user-rank", label: "Plans", icon: BarChart3 },
 ]
 
 const DashboardLayout = ({ children }) => {

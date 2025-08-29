@@ -141,14 +141,27 @@ export default function InvestmentLogPage() {
                         </Button>
                     </div>
 
+                    {!loading && investments.length > 0 && (
+                        <Card className="bg-gradient-to-r from-green-900/30 to-emerald-900/30 backdrop-blur-xl border-green-800/50 mb-6">
+                            <CardContent className="p-6">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-green-400 text-sm font-medium">Total Profit Amount</p>
+                                        <p className="text-white text-3xl font-bold">PKR {formatAmount(totalInterest)}</p>
+                                    </div>
+                                </div>
+                                <div className="text-green-400 text-sm">
+                                    {investments.length} profit{investments.length !== 1 ? "s" : ""}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
+
                     {/* Investment Table Card */}
                     <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
                         <CardHeader>
                             <CardTitle className="text-white flex items-center justify-between">
                                 All Investments
-                                {!loading && (
-                                    <span className="text-sm font-normal text-gray-400">PKR {totalInterest} Total Profit</span>
-                                )}
                             </CardTitle>
                         </CardHeader>
                         <CardContent>

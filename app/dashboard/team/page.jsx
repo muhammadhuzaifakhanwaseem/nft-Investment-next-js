@@ -246,7 +246,7 @@ export default function TeamPage() {
                     <DollarSign className="h-4 w-4 text-green-400" />
                   </div>
                   <div>
-                    <p className="text-gray-400 text-xs">Total Commission</p>
+                    <p className="text-gray-400 text-xs">Total Team Comission</p>
                     <p className="text-white font-bold text-sm">{formatCurrency(totalStats?.total_commission)}</p>
                   </div>
                 </div>
@@ -260,7 +260,7 @@ export default function TeamPage() {
                     <TrendingUp className="h-4 w-4 text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-gray-400 text-xs">Total Investment</p>
+                    <p className="text-gray-400 text-xs">Total Team Investment</p>
                     <p className="text-white font-bold text-sm">{formatCurrency(totalStats?.total_investment)}</p>
                   </div>
                 </div>
@@ -274,7 +274,7 @@ export default function TeamPage() {
                     <Wallet className="h-4 w-4 text-green-400" />
                   </div>
                   <div>
-                    <p className="text-gray-400 text-xs">Total Deposit</p>
+                    <p className="text-gray-400 text-xs">Total Team Deposit</p>
                     <p className="text-white font-bold text-sm">{formatCurrency(totalStats?.total_deposit)}</p>
                   </div>
                 </div>
@@ -288,7 +288,7 @@ export default function TeamPage() {
                     <Users className="h-4 w-4 text-orange-400" />
                   </div>
                   <div>
-                    <p className="text-gray-400 text-xs">Total Users</p>
+                    <p className="text-gray-400 text-xs">Total Team Users</p>
                     <p className="text-white font-bold text-sm">{totalStats?.members_count}</p>
                   </div>
                 </div>

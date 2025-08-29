@@ -9,8 +9,10 @@ import {
   Menu,
   X,
   MessageCircle,
-  HelpCircle
+  HelpCircle,
+  Users
 } from "lucide-react"
+import { FaWhatsapp, FaTelegramPlane } from "react-icons/fa"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -91,6 +93,15 @@ export default function NFTInvestmentDashboard() {
   const handleCloseHelpGuide = () => {
     setShowHelpGuide(false)
     localStorage.setItem("hasSeenHelpGuide", "true")
+  }
+
+  const whatsappGroupLink = "https://chat.whatsapp.com/Cu7aLUqkrHKD3KmlLA8TFO?mode=ems_copy_t"
+  const telegramGroupLink = "https://t.me/+MQGeKfl-lZEyMDhk"
+  const joinWhatsAppGroup = () => {
+    window.open(whatsappGroupLink, "_blank")
+  }
+  const joinTelegramGroup = () => {
+    window.open(telegramGroupLink, "_blank")
   }
 
   return (
@@ -188,6 +199,30 @@ export default function NFTInvestmentDashboard() {
                   </div>
                 </CardContent>
               </Card>
+              <div className="flex items-center mb-6 gap-3" style={{
+                position: 'fixed',
+                top: '65%',
+                width: '25px',
+                left: 0,
+                zIndex: 10,
+                transform: 'rotate(270deg)'
+              }}>
+                <Button
+                  onClick={joinWhatsAppGroup}
+                  className="bg-green-600 hover:bg-green-700 text-white text-xs flex items-center gap-2"
+                >
+                  <FaWhatsapp className="h-3 w-3" />
+                  Join Group
+                </Button>
+
+                <Button
+                  onClick={joinTelegramGroup}
+                  className="bg-blue-600 hover:bg-blue-700 text-white text-xs flex items-center gap-2"
+                >
+                  <FaTelegramPlane className="h-3 w-3" />
+                  Join Group
+                </Button>
+              </div>
               <AdsSlider />
               <div className="mb-6 mt-6">
                 <h2 className="text-white text-lg font-semibold mb-4">Investment Opportunities</h2>
@@ -212,7 +247,7 @@ export default function NFTInvestmentDashboard() {
                             </div>
                             <div className="text-right">
                               <p className="text-lg font-bold text-green-400">
-                                {Number(plan.return_interest ?? 0).toFixed(0)}%
+                                {Number(plan.return_interest ?? 0)}%
                               </p>
                               <p className="text-xs text-gray-400">
                                 {plan?.time?.time == 1
