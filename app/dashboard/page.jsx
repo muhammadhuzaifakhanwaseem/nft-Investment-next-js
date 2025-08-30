@@ -68,6 +68,7 @@ export default function NFTInvestmentDashboard() {
     { url: "/dashboard/transfer/log", title: "All Transfers" },
     { url: "/dashboard/team", title: "My Team" },
     { url: "/dashboard/user-rank", title: "User Rank" },
+    { url: "/dashboard/user-rank/rewards", title: "My Rank Rewards" },
     { url: "/dashboard/profile", title: "Profile" },
     { url: "", title: "Customer Support", action: () => setSupportModalOpen(true) },
   ]
