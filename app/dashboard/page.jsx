@@ -10,7 +10,18 @@ import {
   X,
   MessageCircle,
   HelpCircle,
-  Users
+  Users,
+  ArrowUpCircle,
+  ArrowDownCircle,
+  Receipt,
+  DollarSign,
+  Coins,
+  Send,
+  History,
+  Crown,
+  Gift,
+  User,
+  ChevronRight,
 } from "lucide-react"
 import { FaWhatsapp, FaTelegramPlane } from "react-icons/fa"
 
@@ -29,7 +40,6 @@ import { useUser } from "../context/UserContext"
 
 import logo from '@/public/mepx.png'
 import { ShareWithFriends } from "@/components/share-with-friends"
-import { usePathname } from "next/navigation"
 import DashboardLayout from "@/components/DashboardLayout"
 import AnnouncementModal from "@/components/announcement-modal"
 import HelpButtonGuide from "@/components/help-button-guide"
@@ -57,20 +67,20 @@ export default function NFTInvestmentDashboard() {
   const [isOpen, setIsOpen] = useState(false)
 
   const menuItems = [
-    { url: "/dashboard/deposit/log", title: "My Deposits" },
-    { url: "/dashboard/withdraw/log", title: "My Withdrawals" },
-    { url: "/dashboard/transactions/log", title: "My Transactions" },
-    { url: "/dashboard/investments/log", title: "My Investments" },
-    { url: "/dashboard/profit/daily", title: "My Daily Profits" },
-    { url: "/dashboard/profit/total", title: "My Total Profits" },
-    { url: "/dashboard/referral_commissions", title: "Referral Commissions" },
-    { url: "/dashboard/transfer", title: "Transfer Amount" },
-    { url: "/dashboard/transfer/log", title: "All Transfers" },
-    { url: "/dashboard/team", title: "My Team" },
-    { url: "/dashboard/user-rank", title: "User Rank" },
-    { url: "/dashboard/user-rank/rewards", title: "My Rank Rewards" },
-    { url: "/dashboard/profile", title: "Profile" },
-    { url: "", title: "Customer Support", action: () => setSupportModalOpen(true) },
+    { url: "/dashboard/deposit/log", title: "My Deposits", icon: ArrowDownCircle },
+    { url: "/dashboard/withdraw/log", title: "My Withdrawals", icon: ArrowUpCircle },
+    { url: "/dashboard/transactions/log", title: "My Transactions", icon: Receipt },
+    { url: "/dashboard/investments/log", title: "My Investments", icon: TrendingUp },
+    { url: "/dashboard/profit/daily", title: "My Daily Profits", icon: DollarSign },
+    { url: "/dashboard/profit/total", title: "My Total Profits", icon: Coins },
+    { url: "/dashboard/referral_commissions", title: "Referral Commissions", icon: Users },
+    { url: "/dashboard/transfer", title: "Transfer Amount", icon: Send },
+    { url: "/dashboard/transfer/log", title: "All Transfers", icon: History },
+    { url: "/dashboard/team", title: "My Team", icon: Users },
+    { url: "/dashboard/user-rank", title: "Ranks", icon: Crown },
+    { url: "/dashboard/user-rank/rewards", title: "Rank Rewards", icon: Gift },
+    { url: "/dashboard/profile", title: "Profile", icon: User },
+    { url: "", title: "Customer Support", icon: MessageCircle, action: () => setSupportModalOpen(true) },
   ]
 
   const { logout, user, token, fetchUser } = useUser();
@@ -110,44 +120,54 @@ export default function NFTInvestmentDashboard() {
       <AnnouncementModal />
       {showHelpGuide && <HelpButtonGuide onClose={handleCloseHelpGuide} />}
       <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-gray-800 to-green-900 flex pb-30">
-        {isOpen && <div className="fixed inset-0 bg-white/30 backdrop-blur-xs z-30" onClick={() => setIsOpen(false)} />}
+        {isOpen && <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30" onClick={() => setIsOpen(false)} />}
         <div
-          className={`fixed inset-y-0 my-auto h-[90%] ${isOpen ? "left-[0]" : "-left-[100%]"} w-72 bg-gray-900 backdrop-blur-xl border-r border-green-500/40 rounded-r-3xl p-4 flex flex-col z-30 duration-300`}
+          className={`fixed inset-y-0 my-auto h-[90%] ${isOpen ? "left-[0]" : "-left-[100%]"} w-80 bg-gray-900/95 backdrop-blur-xl border-r border-emerald-500/30 rounded-r-2xl p-6 flex flex-col z-30 duration-300 shadow-2xl`}
         >
-          <Link href={'/dashboard/profile'} className="flex border-b-1 pb-4 border-green-400 items-center gap-3 mb-4">
-            <Image src={logo} alt="logo" width={40} height={40} />
-            <div>
-              <h2 className="text-base font-semibold text-white leading-5">{user?.username}</h2>
-              <p className="text-sm text-gray-400">{user?.phone}</p>
+          <Link href={"/dashboard/profile"} className="flex items-center gap-4 pb-6 mb-6 border-b border-gray-700/50">
+            <div className="relative">
+              <Image src={logo || "/placeholder.svg"} alt="logo" width={48} height={48} className="rounded-xl" />
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-gray-900"></div>
+            </div>
+            <div className="flex-1">
+              <h2 className="text-lg font-semibold text-white leading-tight">{user?.username}</h2>
+              <p className="text-sm text-gray-400 mt-1">{user?.phone}</p>
             </div>
           </Link>
-          <div className="flex flex-col gap-3 text-md text-white">
-            {menuItems.map((item, i) =>
-              item.action ? (
+
+          <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
+            {menuItems.map((item, i) => {
+              const IconComponent = item.icon
+              return item.action ? (
                 <button
                   key={i}
                   onClick={item.action}
-                  className="flex items-center justify-between hover:text-emerald-400 cursor-pointer text-left"
+                  className="group flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-emerald-500/10 hover:text-emerald-400 text-gray-300 transition-all duration-200 text-left"
                 >
-                  <span>{item.title}</span>
+                  <IconComponent className="w-5 h-5 text-gray-400 group-hover:text-emerald-400 transition-colors" />
+                  <span className="font-medium flex-1">{item.title}</span>
+                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </button>
               ) : (
                 <Link
                   key={i}
                   href={item.url}
-                  className="flex items-center justify-between hover:text-emerald-400 cursor-pointer"
+                  className="group flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-emerald-500/10 hover:text-emerald-400 text-gray-300 transition-all duration-200"
                 >
-                  <span>{item.title}</span>
+                  <IconComponent className="w-5 h-5 text-gray-400 group-hover:text-emerald-400 transition-colors" />
+                  <span className="font-medium flex-1">{item.title}</span>
+                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
-              ),
-            )}
+              )
+            })}
           </div>
+
           <button
             onClick={logout}
-            className="mt-auto flex items-center gap-2 text-red-400 hover:text-red-400 font-medium"
+            className="group flex items-center gap-4 px-4 py-3 mt-6 rounded-xl border border-red-500/20 hover:bg-red-500/10 hover:border-red-500/40 text-red-400 hover:text-red-300 font-medium transition-all duration-200"
           >
             <LogOut className="w-5 h-5" />
-            Logout
+            <span>Logout</span>
           </button>
         </div>
 
