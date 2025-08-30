@@ -240,10 +240,12 @@ export default function WithdrawModal({ withdrawModalOpen, setWithdrawModalOpen,
                             </span>
                           </div>
                           <p className="text-xs text-gray-400 mt-1">
-                            Min: PKR {Number(method.min_amount).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })} •
-                            Max: PKR {Number(method.max_amount).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                            Min: PKR {parseInt(method.min_amount).toLocaleString("en-US")} •
+                            Max: PKR {parseInt(method.max_amount).toLocaleString("en-US")}
                           </p>
-                          <p className="text-xs text-orange-300">Fee: {method.charge}% charge</p>
+                          <p className="text-xs text-orange-300">
+                            Fee: {parseInt(method.charge)}% charge
+                          </p>
                         </div>
 
                         {/* Selection Indicator */}
