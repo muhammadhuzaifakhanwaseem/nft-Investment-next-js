@@ -137,18 +137,29 @@ const InvestModal = ({
                                     <span className="text-gray-400">Duration:</span>
                                     <span className="text-white">{selectedPlan.time?.name}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-gray-400">Min:</span>
-                                    <span className="text-white">
-                                        PKR {Number(selectedPlan.minimum_amount ?? 0).toFixed(0)}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-gray-400">Max:</span>
-                                    <span className="text-white">
-                                        PKR {Number(selectedPlan.maximum_amount ?? 0).toFixed(0)}
-                                    </span>
-                                </div>
+                                {selectedPlan?.minimum_amount == null || selectedPlan?.minimum_amount < 1 ?
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-400">Fixed Amount:</span>
+                                        <span className="text-white">
+                                            PKR {Number(selectedPlan?.invest_limit ?? 0).toFixed(0)}
+                                        </span>
+                                    </div>
+                                    :
+                                    <>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-400">Min:</span>
+                                            <span className="text-white">
+                                                PKR {Number(selectedPlan.minimum_amount ?? 0).toFixed(0)}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-400">Max:</span>
+                                            <span className="text-white">
+                                                PKR {Number(selectedPlan.maximum_amount ?? 0).toFixed(0)}
+                                            </span>
+                                        </div>
+                                    </>
+                                }
                             </div>
                         )}
 
@@ -170,17 +181,29 @@ const InvestModal = ({
                             >
                                 Cancel
                             </Button>
-                            <Button
-                                disabled={
-                                    investAmount < Number(selectedPlan?.minimum_amount ?? 0) ||
-                                    investAmount > Number(selectedPlan?.maximum_amount ?? 0)
-                                }
-                                onClick={handleInvest}
-                                className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-green-700"
-                            >
-                                Invest Now
-                            </Button>
-
+                            {selectedPlan?.minimum_amount == null || selectedPlan?.minimum_amount < 1
+                                ?
+                                <Button
+                                    disabled={
+                                        investAmount !== Number(selectedPlan?.invest_limit ?? 0)
+                                    }
+                                    onClick={handleInvest}
+                                    className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-green-700"
+                                >
+                                    Invest Now
+                                </Button>
+                                :
+                                <Button
+                                    disabled={
+                                        investAmount < Number(selectedPlan?.minimum_amount ?? 0) ||
+                                        investAmount > Number(selectedPlan?.maximum_amount ?? 0)
+                                    }
+                                    onClick={handleInvest}
+                                    className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 bg-green-700"
+                                >
+                                    Invest Now
+                                </Button>
+                            }
                         </div>
                     </div>
                 </DialogContent>

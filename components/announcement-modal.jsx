@@ -28,7 +28,7 @@ export default function AnnouncementModal() {
       if (!isLoading && announcement) {
         setIsOpen(true)
       }
-    }, 5000)
+    }, 10000)
 
     return () => clearTimeout(timer)
   }, [isLoading, announcement])

@@ -288,11 +288,16 @@ export default function NFTInvestmentDashboard() {
                             </div>
                           </div>
                           <div className="flex items-center justify-between mb-3">
-                            <span className="text-sm text-green-400">
-                              PKR {Number(plan.minimum_amount ?? 0).toFixed(0)}{" "}
-                              <span className="text-white">to</span>{" "}
-                              PKR {Number(plan.maximum_amount ?? 0).toFixed(0)}
-                            </span>
+                            {plan?.minimum_amount == null || plan?.minimum_amount < 1 ?
+                              <span className="text-sm text-green-400">
+                                PKR {Number(plan.invest_limit ?? 0).toFixed(0)}{" "}
+                              </span> :
+                              <span className="text-sm text-green-400">
+                                PKR {Number(plan.minimum_amount ?? 0).toFixed(0)}{" "}
+                                <span className="text-white">to</span>{" "}
+                                PKR {Number(plan.maximum_amount ?? 0).toFixed(0)}
+                              </span>
+                            }
                             {plan?.lock == 0 ? (
                               <Button
                                 onClick={() => {
