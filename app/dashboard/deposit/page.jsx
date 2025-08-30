@@ -43,8 +43,8 @@ export default function DepositPage() {
     "Jazz Cash": {
       name: "Jazz Cash",
       icon: <Smartphone className="h-6 w-6" />,
-      accountNumber: "03297317417",
-      accountTitle: "Nauman Shah",
+      accountNumber: "03710087475",
+      accountTitle: "Akhter Ali",
       ibanNumber: "N/A",
       color: "bg-orange-600",
     },
