@@ -192,10 +192,9 @@ export default function WithdrawModal({ withdrawModalOpen, setWithdrawModalOpen,
                       onClick={() => !fieldsDisabled && setMethodId(method.id.toString())}
                       className={`
                         relative cursor-pointer rounded-lg border-2 p-4 transition-all duration-200
-                        ${
-                          isSelected
-                            ? "border-green-400 bg-green-400/10"
-                            : "border-gray-700 bg-gray-800/30 hover:border-gray-600 hover:bg-gray-800/50"
+                        ${isSelected
+                          ? "border-green-400 bg-green-400/10"
+                          : "border-gray-700 bg-gray-800/30 hover:border-gray-600 hover:bg-gray-800/50"
                         }
                         ${fieldsDisabled ? "opacity-50 cursor-not-allowed" : ""}
                       `}
@@ -231,19 +230,18 @@ export default function WithdrawModal({ withdrawModalOpen, setWithdrawModalOpen,
                             <span
                               className={`
                               px-2 py-0.5 rounded-full text-xs font-medium
-                              ${
-                                methodType === "mobile"
+                              ${methodType === "mobile"
                                   ? "bg-blue-500/20 text-blue-300"
                                   : "bg-emerald-500/20 text-emerald-300"
-                              }
+                                }
                             `}
                             >
                               {methodType === "mobile" ? "Mobile Wallet" : "Bank Transfer"}
                             </span>
                           </div>
                           <p className="text-xs text-gray-400 mt-1">
-                            Min: PKR {Number.parseFloat(method.min_amount).toLocaleString()} • Max: PKR{" "}
-                            {Number.parseFloat(method.max_amount).toLocaleString()}
+                            Min: PKR {Number(method.min_amount).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })} •
+                            Max: PKR {Number(method.max_amount).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </p>
                           <p className="text-xs text-orange-300">Fee: {method.charge}% charge</p>
                         </div>

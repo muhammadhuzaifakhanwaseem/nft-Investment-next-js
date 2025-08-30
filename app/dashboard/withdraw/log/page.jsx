@@ -91,6 +91,11 @@ export default function LogPage() {
         })
     }
 
+    const totalAmount = withdrawals.reduce((sum, withdraw) => {
+        const amount = Number.parseFloat(withdraw?.withdraw_amount || 0)
+        return sum + amount
+    }, 0)
+
     return (
         <DashboardLayout>
             <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4 pb-30">
@@ -113,6 +118,22 @@ export default function LogPage() {
                             </Button>
                         </div>
                     </div>
+
+                    {!loading && withdrawals.length > 0 && (
+                        <Card className="bg-gradient-to-r from-green-900/30 to-emerald-900/30 backdrop-blur-xl border-green-800/50 mb-6">
+                            <CardContent className="p-6">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-green-400 text-sm font-medium">Total Withdraw Amount</p>
+                                        <p className="text-white text-3xl font-bold">PKR {totalAmount}</p>
+                                    </div>
+                                </div>
+                                <div className="text-green-400 text-sm">
+                                    {withdrawals.length} Withdraw{withdrawals.length !== 1 ? "s" : ""}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
 
                     {/* Log Table Card */}
                     <Card className="bg-gray-900/50 backdrop-blur-xl border-gray-800/50">
